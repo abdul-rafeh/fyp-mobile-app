@@ -11,6 +11,7 @@ import {AuthContext} from './Components/context';
 import AuthStackScreen from './Screens/AuthStackScreen';
 import DashboardScreen from './Screens/DashboardScreen';
 import WhoWillWin from './Screens/WhoWillWin';
+import T20Screen from './Screens/T20';
 import {DrawerContent} from './Screens/DrawerContent';
 import Toast from 'react-native-simple-toast';
 import {post} from './Request';
@@ -154,7 +155,7 @@ function App() {
             drawerContent={(props) => <DrawerContent {...props} />}>
             <Drawer.Screen name="DashboardScreen" component={DashboardScreen} />
             <Drawer.Screen name="WhoWillWin" component={WhoWillWin} />
-            {/* <Drawer.Screen name="SettingsScreen" component={SettingsScreen} /> */}
+            <Drawer.Screen name="T20Screen" component={T20Screen} />
             {/* <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} /> */}
           </Drawer.Navigator>
         ) : (

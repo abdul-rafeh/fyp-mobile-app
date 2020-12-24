@@ -7,70 +7,18 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
-  ActivityIndicator,
-  Image,
 } from 'react-native';
 import Header from './Header';
 import {Teams, Venue} from '../Helpers/Teams';
 import Config from '../Config';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
+import {LineChart} from 'react-native-chart-kit';
 import {post} from '../Request';
-import {getFlagImages} from '../Helpers/Flags';
-import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
-const chartConfig = {
-  // backgroundGradientFrom: '#1E2923',
-  // backgroundGradientFromOpacity: 0,
-  // backgroundGradientTo: '#08130D',
-  // backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-  // useShadowColorFromDataset: false, // optional
-  horizontalOffset: 50,
-  width: '100%',
-  height: 20,
-};
-const piedata = [
-  {
-    name: 'Seoul',
-    population: 21500000,
-    color: 'rgba(131, 167, 234, 1)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Toronto',
-    population: 2800000,
-    color: '#F00',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Beijing',
-    population: 527612,
-    color: 'red',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'New York',
-    population: 8538000,
-    color: '#ffffff',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Moscow',
-    population: 11920000,
-    color: 'rgb(0, 0, 255)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-];
-export default class WhoWillWin extends Component {
+
+export default class T20 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
       team_a: '',
       team_b: '',
       overs: '',
@@ -84,28 +32,8 @@ export default class WhoWillWin extends Component {
       runLast5Overs: '',
       wicketsLast5Overs: '',
       venue: '',
-      target: 0,
-      teamAPrediction: '',
     };
   }
-  componentDidMount() {
-    this.setState({
-      venue: 'Sharjah Cricket Stadium',
-      team_a: 'Pakistan',
-      team_b: 'India',
-      runs: 100,
-      wickets: 3,
-      overs: 5,
-      balls: 1,
-      runs_last_5: 10,
-      wickets_last_5: 0,
-      fours_till_now: 0,
-      sixes_till_now: 1,
-      no_balls_till_now: 0,
-      wide_balls_till_now: 0,
-    });
-  }
-
   handleSubmit = async (
     overs,
     balls,
@@ -120,7 +48,6 @@ export default class WhoWillWin extends Component {
     runLast5Overs,
     wicketsLast5Overs,
     venue,
-    target,
   ) => {
     const dataA = {
       venue: venue,
@@ -135,21 +62,7 @@ export default class WhoWillWin extends Component {
       sixes_till_now: sixesTillNow,
       no_balls_till_now: noBallsTillNow,
       wide_balls_till_now: wideBallsTillNow,
-      target: target,
     };
-
-    this.setState({isLoading: true});
-    let teamAPrediction = await post(
-      Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET,
-      dataA,
-    );
-
-    if (teamAPrediction) {
-      this.setState({
-        teamAPrediction: teamAPrediction,
-        predicted: true,
-      });
-    }
 
     const dataB = {
       venue: venue,
@@ -164,41 +77,36 @@ export default class WhoWillWin extends Component {
       sixes_till_now: sixesTillNow,
       no_balls_till_now: noBallsTillNow,
       wide_balls_till_now: wideBallsTillNow,
-      target: teamAPrediction.predictions.total,
     };
+    this.setState({isLoading: true});
+    console.log(dataA);
+    let teamAPrediction = await post(
+      Config.URL.PREDICTION.PREDICT_MATCH_T20,
+      dataA,
+    );
     let teamBPrediction = await post(
-      Config.URL.PREDICTION.PREDICT_MATCH,
+      Config.URL.PREDICTION.PREDICT_MATCH_T20,
       dataB,
     );
 
-    console.log('***************checking data Team A*****************');
-    console.log(teamAPrediction);
-    console.log('***************checking data Team A*****************');
-    console.log('***************checking data Team b*****************');
-    console.log(teamBPrediction);
-    console.log('***************checking data Team b*****************');
-    if (teamAPrediction && teamBPrediction) {
+    if (
+      teamAPrediction &&
+      teamBPrediction &&
+      teamAPrediction.data &&
+      teamBPrediction.data
+    ) {
       this.setState({
-        teamAPrediction: teamAPrediction,
-        teamBPrediction: teamBPrediction,
+        teamAPrediction: teamAPrediction.data,
+        teamBPrediction: teamBPrediction.data,
         isLoading: false,
         predicted: true,
       });
-      this.scroll.scrollTo({y: 1000});
     } else {
       this.setState({error: true, isLoading: false});
     }
   };
-  getWinner = () => {
-    const {teamAPrediction, teamBPrediction} = this.state;
-    if (teamAPrediction.predictions.total > teamBPrediction.predictions.total) {
-      return this.state.team_a;
-    } else {
-      return this.state.team_b;
-    }
-  };
+
   render() {
-    const {teamAPrediction, teamBPrediction} = this.state;
     var teamArray = [];
     var venueArray = [];
     Teams.map((team) => {
@@ -396,6 +304,9 @@ export default class WhoWillWin extends Component {
                 style={styles.loginBtn}
                 onPress={() => {
                   // eslint-disable-next-line no-lone-blocks
+                  // {
+                  //   loginHandler(data.email, data.password);
+                  // }
                   // this.handleSubmit(
                   //   this.state.overs,
                   //   this.state.balls,
@@ -410,8 +321,8 @@ export default class WhoWillWin extends Component {
                   //   this.state.runLast5Overs,
                   //   this.state.wicketsLast5Overs,
                   //   this.state.venue,
-                  //   this.state.target,
                   // );
+
                   this.scroll.scrollTo({y: 1000});
                   this.setState({scroll: true});
                 }}>
@@ -419,106 +330,60 @@ export default class WhoWillWin extends Component {
                   Predict
                 </Text>
               </TouchableOpacity>
-              {/* {this.state.isLoading ? (
-                <ActivityIndicator />
-              ) : this.state.predicted && */}
               {this.state.scroll ? (
                 <>
-                  {/* <View>
-                    <Image
-                      // source={getFlagImages(this.getWinner())}
-                      source={require('../assets/flags/Pakistan.png')}
-                      style={{
-                        width: 200,
-                        height: 200,
-                        alignSelf: 'center',
-                        marginBottom: 10,
-                      }}
-                    />
-                  </View> */}
-                  <CardViewWithImage
-                    width={400}
-                    source={require('../assets/flags/Pakistan.png')}
-                    title={'Pakistan will win this match'}
-                    imageWidth={100}
-                    imageHeight={100}
-                    roundedImage={true}
-                    roundedImageValue={50}
-                    imageMargin={{top: 10}}
-                    // style={{shadowOpacity: 0.3}}
-                  />
-                  <CardView style={{width: '100%', shadowOpacity: 4}}>
-                    <LineChart
-                      data={{
-                        labels: ['10', '20', '30', '40', '50'],
-                        datasets: [
-                          {
-                            // data: teamAPrediction.predictions.runrates,
-                            data: [20, 45, 28, 80, 99, 43],
-                          },
-                        ],
-                      }}
-                      width={Dimensions.get('window').width} // from react-native
-                      height={220}
-                      verticalLabelRotation={30}
-                      yAxisLabel="$"
-                      // yAxisSuffix="k"
-                      yAxisInterval={1} // optional, defaults to 1
-                      chartConfig={{
-                        backgroundColor: '#e26a00',
-                        backgroundGradientFrom: '#fb8c00',
-                        backgroundGradientTo: '#ffa726',
-                        decimalPlaces: 2, // optional, defaults to 2dp
-                        color: (opacity = 1) =>
-                          `rgba(255, 255, 255, ${opacity})`,
-                        labelColor: (opacity = 1) =>
-                          `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                          borderRadius: 16,
+                  <Text>Bezier Line Chart</Text>
+                  <LineChart
+                    data={{
+                      labels: [
+                        'January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',
+                      ],
+                      datasets: [
+                        {
+                          data: [
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                          ],
                         },
-                        propsForDots: {
-                          r: '6',
-                          strokeWidth: '2',
-                          stroke: '#ffa726',
-                        },
-                      }}
-                      style={{
-                        marginVertical: 8,
+                      ],
+                    }}
+                    width={Dimensions.get('window').width} // from react-native
+                    height={220}
+                    yAxisLabel="$"
+                    yAxisSuffix="k"
+                    yAxisInterval={1} // optional, defaults to 1
+                    chartConfig={{
+                      backgroundColor: '#e26a00',
+                      backgroundGradientFrom: '#fb8c00',
+                      backgroundGradientTo: '#ffa726',
+                      decimalPlaces: 2, // optional, defaults to 2dp
+                      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                      labelColor: (opacity = 1) =>
+                        `rgba(255, 255, 255, ${opacity})`,
+                      style: {
                         borderRadius: 16,
-                      }}
-                    />
-                  </CardView>
-                  <CardView style={{width: '100%', shadowOpacity: 0.5}}>
-                    <PieChart
-                      data={
-                        //   [
-                        //   {
-                        //     name: 'Total Fours',
-                        //     population: teamAPrediction.predictions.total_fours,
-                        //     color: 'rgba(131, 167, 234, 1)',
-                        //     legendFontColor: '#7F7F7F',
-                        //     legendFontSize: 15,
-                        //   },
-                        //   {
-                        //     name: 'Total Sixes',
-                        //     population: teamAPrediction.predictions.total_sixes,
-                        //     color: '#F00',
-                        //     legendFontColor: '#7F7F7F',
-                        //     legendFontSize: 15,
-                        //   },
-                        // ]
-                        piedata
-                      }
-                      width={Dimensions.get('window').width}
-                      height={220}
-                      chartConfig={chartConfig}
-                      accessor={'population'}
-                      backgroundColor={'transparent'}
-                      paddingLeft={'15'}
-                      center={[10, 50]}
-                      absolute
-                    />
-                  </CardView>
+                      },
+                      propsForDots: {
+                        r: '6',
+                        strokeWidth: '2',
+                        stroke: '#ffa726',
+                      },
+                    }}
+                    bezier
+                    style={{
+                      marginVertical: 8,
+                      borderRadius: 16,
+                    }}
+                  />
                 </>
               ) : null}
             </View>

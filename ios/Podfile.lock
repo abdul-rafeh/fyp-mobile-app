@@ -305,14 +305,14 @@ PODS:
     - React
   - RNCMaskedView (0.1.10):
     - React
-  - RNCPicker (1.9.4):
-    - React-Core
   - RNGestureHandler (1.9.0):
     - React-Core
   - RNReanimated (1.13.2):
     - React-Core
   - RNScreens (2.15.0):
     - React-Core
+  - RNSVG (12.1.0):
+    - React
   - RNVectorIcons (7.1.0):
     - React
   - Toast (4.0.0)
@@ -371,10 +371,10 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
-  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -453,14 +453,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
-  RNCPicker:
-    :path: "../node_modules/@react-native-picker/picker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -507,10 +507,10 @@ SPEC CHECKSUMS:
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
   RNCAsyncStorage: ad9629bdbe5b667619b4855d217db8ed930d6abd
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
-  RNCPicker: 2c31098349f499e7ab4da6c1ce26f7537d271062
   RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNScreens: 2ad555d4d9fa10b91bb765ca07fe9b29d59573f0
+  RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a

@@ -46,16 +46,16 @@ export function DrawerContent(props) {
               icon={({color, size}) => (
                 <Icon name="home-outline" color={color} size={size} />
               )}
-              label="Home"
+              label="Dashboard"
               onPress={() => {
-                props.navigation.navigate('Home');
+                props.navigation.navigate('DashboardScreen');
               }}
             />
             <DrawerItem
               icon={({color, size}) => (
                 <Icon name="account-outline" color={color} size={size} />
               )}
-              label="Who Will Win?"
+              label="ODI"
               onPress={() => {
                 props.navigation.navigate('WhoWillWin');
               }}
@@ -64,27 +64,9 @@ export function DrawerContent(props) {
               icon={({color, size}) => (
                 <Icon name="bookmark-outline" color={color} size={size} />
               )}
-              label="Bookmarks"
+              label="T20"
               onPress={() => {
-                props.navigation.navigate('BookmarkScreen');
-              }}
-            />
-            <DrawerItem
-              icon={({color, size}) => (
-                <Icon name="settings-outline" color={color} size={size} />
-              )}
-              label="Settings"
-              onPress={() => {
-                props.navigation.navigate('SettingsScreen');
-              }}
-            />
-            <DrawerItem
-              icon={({color, size}) => (
-                <Icon name="account-check-outline" color={color} size={size} />
-              )}
-              label="Support"
-              onPress={() => {
-                props.navigation.navigate('SupportScreen');
+                props.navigation.navigate('T20Screen');
               }}
             />
           </Drawer.Section>
