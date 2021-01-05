@@ -20,6 +20,8 @@ export default {
       PREDICT_MATCH_T20: 'prediction/predict_match_T20',
       WHAT_SCORE_WILL_BATSMAN_MAKE: 'prediction/batsman_performance',
       PREDICT_MATCH_WITH_TARGET: 'prediction/predict_match_with_target',
+      PREDICT_MATCH_WITH_TARGET_T20:
+        '/prediction/predict_match_with_target_t20',
     },
   },
 };

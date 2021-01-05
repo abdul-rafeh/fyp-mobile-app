@@ -19,15 +19,15 @@ import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
 import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
 const chartConfig = {
-  // backgroundGradientFrom: '#1E2923',
-  // backgroundGradientFromOpacity: 0,
-  // backgroundGradientTo: '#08130D',
-  // backgroundGradientToOpacity: 0.5,
+  backgroundGradientFrom: '#1E2923',
+  backgroundGradientFromOpacity: 0,
+  backgroundGradientTo: '#08130D',
+  backgroundGradientToOpacity: 0.5,
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
   // useShadowColorFromDataset: false, // optional
-  horizontalOffset: 50,
-  width: '100%',
-  height: 20,
+  // horizontalOffset: 50,
+  // width: '100%',
+  // height: 20,
 };
 const piedata = [
   {
@@ -41,27 +41,6 @@ const piedata = [
     name: 'Toronto',
     population: 2800000,
     color: '#F00',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Beijing',
-    population: 527612,
-    color: 'red',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'New York',
-    population: 8538000,
-    color: '#ffffff',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Moscow',
-    population: 11920000,
-    color: 'rgb(0, 0, 255)',
     legendFontColor: '#7F7F7F',
     legendFontSize: 15,
   },
@@ -216,7 +195,7 @@ export default class WhoWillWin extends Component {
               <Text style={{padding: 10}}>Batting team</Text>
               <DropDownPicker
                 items={teamArray}
-                defaultValue="Afghanistan"
+                defaultValue="Pakistan"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
@@ -235,10 +214,10 @@ export default class WhoWillWin extends Component {
                 onChangeItem={(item) => this.setState({team_a: item.value})}
               />
               <Text style={{padding: 10}}>Bowling team</Text>
-              <View style={{paddingBottom: 50}}>
+              <View>
                 <DropDownPicker
                   items={teamArray}
-                  defaultValue="Australia"
+                  defaultValue="India"
                   containerStyle={{height: 40}}
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
@@ -257,7 +236,7 @@ export default class WhoWillWin extends Component {
                   onChangeItem={(item) => this.setState({team_b: item.value})}
                 />
               </View>
-              <View style={{paddingBottom: 70}}>
+              <View>
                 <Text style={{padding: 10}}>Venue</Text>
                 <DropDownPicker
                   items={venueArray}
@@ -274,7 +253,7 @@ export default class WhoWillWin extends Component {
                     borderBottomLeftRadius: 20,
                     borderBottomRightRadius: 20,
                   }}
-                  defaultValue="AMI Stadium"
+                  defaultValue="Sharjah Cricket Stadium"
                   containerStyle={{height: 40}}
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
@@ -396,22 +375,22 @@ export default class WhoWillWin extends Component {
                 style={styles.loginBtn}
                 onPress={() => {
                   // eslint-disable-next-line no-lone-blocks
-                  // this.handleSubmit(
-                  //   this.state.overs,
-                  //   this.state.balls,
-                  //   this.state.team_a,
-                  //   this.state.team_b,
-                  //   this.state.runsTillNow,
-                  //   this.state.wicketsTillNow,
-                  //   this.state.foursTillNow,
-                  //   this.state.sixesTillNow,
-                  //   this.state.wideBallsTillNow,
-                  //   this.state.noBallsTillNow,
-                  //   this.state.runLast5Overs,
-                  //   this.state.wicketsLast5Overs,
-                  //   this.state.venue,
-                  //   this.state.target,
-                  // );
+                  this.handleSubmit(
+                    this.state.overs,
+                    this.state.balls,
+                    this.state.team_a,
+                    this.state.team_b,
+                    this.state.runsTillNow,
+                    this.state.wicketsTillNow,
+                    this.state.foursTillNow,
+                    this.state.sixesTillNow,
+                    this.state.wideBallsTillNow,
+                    this.state.noBallsTillNow,
+                    this.state.runLast5Overs,
+                    this.state.wicketsLast5Overs,
+                    this.state.venue,
+                    this.state.target,
+                  );
                   this.scroll.scrollTo({y: 1000});
                   this.setState({scroll: true});
                 }}>
@@ -421,21 +400,12 @@ export default class WhoWillWin extends Component {
               </TouchableOpacity>
               {/* {this.state.isLoading ? (
                 <ActivityIndicator />
-              ) : this.state.predicted && */}
-              {this.state.scroll ? (
+              ) : this.state.predicted && this.state.scroll ? ( */}
+              {/* {this.state.scroll ? ( */}
+              {this.state.isLoading ? (
+                <ActivityIndicator />
+              ) : this.state.predicted && this.state.scroll ? (
                 <>
-                  {/* <View>
-                    <Image
-                      // source={getFlagImages(this.getWinner())}
-                      source={require('../assets/flags/Pakistan.png')}
-                      style={{
-                        width: 200,
-                        height: 200,
-                        alignSelf: 'center',
-                        marginBottom: 10,
-                      }}
-                    />
-                  </View> */}
                   <CardViewWithImage
                     width={400}
                     source={require('../assets/flags/Pakistan.png')}
@@ -447,21 +417,41 @@ export default class WhoWillWin extends Component {
                     imageMargin={{top: 10}}
                     // style={{shadowOpacity: 0.3}}
                   />
+                  <CardView
+                    style={{width: '100%', height: 200, shadowOpacity: 0.3}}>
+                    <Text
+                      style={{
+                        marginLeft: 15,
+                        fontSize: 15,
+                        fontWeight: 'bold',
+                      }}>
+                      TOTAL PREDCITED SCORE:
+                    </Text>
+                    <Text
+                      style={{
+                        marginLeft: 150,
+                        fontSize: 40,
+                        fontWeight: 'bold',
+                        padding: 20,
+                      }}>
+                      {teamAPrediction.predictions.total}
+                    </Text>
+                  </CardView>
                   <CardView style={{width: '100%', shadowOpacity: 4}}>
                     <LineChart
                       data={{
                         labels: ['10', '20', '30', '40', '50'],
                         datasets: [
                           {
-                            // data: teamAPrediction.predictions.runrates,
-                            data: [20, 45, 28, 80, 99, 43],
+                            data: teamAPrediction.predictions.runrates,
+                            // data: [20, 45, 28, 80, 99, 43],
                           },
                         ],
                       }}
                       width={Dimensions.get('window').width} // from react-native
                       height={220}
                       verticalLabelRotation={30}
-                      yAxisLabel="$"
+                      // yAxisLabel="$"
                       // yAxisSuffix="k"
                       yAxisInterval={1} // optional, defaults to 1
                       chartConfig={{
@@ -488,35 +478,40 @@ export default class WhoWillWin extends Component {
                       }}
                     />
                   </CardView>
-                  <CardView style={{width: '100%', shadowOpacity: 0.5}}>
+                  <CardView
+                    style={{width: '100%', height: 200, shadowOpacity: 0.5}}>
                     <PieChart
                       data={
-                        //   [
-                        //   {
-                        //     name: 'Total Fours',
-                        //     population: teamAPrediction.predictions.total_fours,
-                        //     color: 'rgba(131, 167, 234, 1)',
-                        //     legendFontColor: '#7F7F7F',
-                        //     legendFontSize: 15,
-                        //   },
-                        //   {
-                        //     name: 'Total Sixes',
-                        //     population: teamAPrediction.predictions.total_sixes,
-                        //     color: '#F00',
-                        //     legendFontColor: '#7F7F7F',
-                        //     legendFontSize: 15,
-                        //   },
-                        // ]
-                        piedata
+                        [
+                          {
+                            name: 'Total Fours',
+                            population: teamAPrediction.predictions.total_fours,
+                            color: 'rgba(131, 167, 234, 1)',
+                            legendFontColor: '#7F7F7F',
+                            legendFontSize: 15,
+                          },
+                          {
+                            name: 'Total Sixes',
+                            population: teamAPrediction.predictions.total_sixes,
+                            color: '#F00',
+                            legendFontColor: '#7F7F7F',
+                            legendFontSize: 15,
+                          },
+                        ]
+                        // piedata
                       }
-                      width={Dimensions.get('window').width}
-                      height={220}
+                      width={Dimensions.get('window').width - 16}
+                      height={250}
                       chartConfig={chartConfig}
                       accessor={'population'}
                       backgroundColor={'transparent'}
-                      paddingLeft={'15'}
+                      paddingLeft={'30'}
                       center={[10, 50]}
                       absolute
+                      style={{
+                        marginBottom: 10,
+                        borderRadius: 16,
+                      }}
                     />
                   </CardView>
                 </>
