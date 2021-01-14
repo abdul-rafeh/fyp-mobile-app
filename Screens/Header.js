@@ -19,6 +19,9 @@ export default class Header extends Component {
             {this.props.route.name === 'DashboardScreen' ? 'Dashboard' : null}
             {this.props.route.name === 'WhoWillWin' ? 'ODI Prediction' : null}
             {this.props.route.name === 'T20Screen' ? 'T20 Prediction' : null}
+            {this.props.route.name === 'BatsmanODIScreen'
+              ? 'Batsman ODI Score'
+              : null}
           </Text>
           {/* </View> */}
         </View>
