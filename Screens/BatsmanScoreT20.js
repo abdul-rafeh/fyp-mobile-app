@@ -19,7 +19,7 @@ import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
 import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
 
-export default class BatsmanScoreODI extends Component {
+export default class BatsmanScoreT20 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -73,7 +73,7 @@ export default class BatsmanScoreODI extends Component {
         values.total_sixes_by_striker_till_now * 6);
     this.setState({isLoading: true});
     let batsmanScores = await post(
-      Config.URL.PREDICTION.PREDICT_BATSMAN_WITH_TARGET_ODI,
+      Config.URL.PREDICTION.PREDICT_BATSMAN_WITH_TARGET_T20,
       values,
     );
     this.setState({isLoading: false});

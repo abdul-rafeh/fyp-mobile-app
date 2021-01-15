@@ -150,12 +150,6 @@ export default class WhoWillWin extends Component {
       dataB,
     );
 
-    console.log('***************checking data Team A*****************');
-    console.log(teamAPrediction);
-    console.log('***************checking data Team A*****************');
-    console.log('***************checking data Team b*****************');
-    console.log(teamBPrediction);
-    console.log('***************checking data Team b*****************');
     if (teamAPrediction && teamBPrediction) {
       this.setState({
         teamAPrediction: teamAPrediction,

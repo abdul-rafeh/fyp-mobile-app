@@ -78,6 +78,15 @@ export function DrawerContent(props) {
                 props.navigation.navigate('BatsmanODIScreen');
               }}
             />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Icon name="bookmark-outline" color={color} size={size} />
+              )}
+              label="Batsman T20 Score"
+              onPress={() => {
+                props.navigation.navigate('BatsmanT20Screen');
+              }}
+            />
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>

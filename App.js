@@ -13,6 +13,7 @@ import DashboardScreen from './Screens/DashboardScreen';
 import WhoWillWin from './Screens/WhoWillWin';
 import T20Screen from './Screens/T20';
 import BatsmanODIScreen from './Screens/BatsmanScoreODI';
+import BatsmanT20Screen from './Screens/BatsmanScoreT20';
 import {DrawerContent} from './Screens/DrawerContent';
 import Toast from 'react-native-simple-toast';
 import {post} from './Request';
@@ -160,6 +161,10 @@ function App() {
             <Drawer.Screen
               name="BatsmanODIScreen"
               component={BatsmanODIScreen}
+            />
+            <Drawer.Screen
+              name="BatsmanT20Screen"
+              component={BatsmanT20Screen}
             />
             {/* <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} /> */}
           </Drawer.Navigator>
