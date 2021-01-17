@@ -114,10 +114,13 @@ export default class T20 extends Component {
       sixes_till_now: sixesTillNow,
       no_balls_till_now: noBallsTillNow,
       wide_balls_till_now: wideBallsTillNow,
-      target: target,
+      target: 0,
     };
 
     this.setState({isLoading: true});
+    console.log('******* HELLO ******');
+    console.log(dataA);
+    console.log('******* HELLO ******');
     let teamAPrediction = await post(
       Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET_T20,
       dataA,
@@ -143,10 +146,10 @@ export default class T20 extends Component {
       sixes_till_now: sixesTillNow,
       no_balls_till_now: noBallsTillNow,
       wide_balls_till_now: wideBallsTillNow,
-      target: teamAPrediction.predictions.total,
+      target: teamAPrediction.predictions.total + 1,
     };
     let teamBPrediction = await post(
-      Config.URL.PREDICTION.PREDICT_MATCH,
+      Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET_T20,
       dataB,
     );
 
@@ -192,7 +195,7 @@ export default class T20 extends Component {
         <View style={styles.container}>
           <Header {...this.props} />
           <ScrollView ref={(node) => (this.scroll = node)}>
-            <View>
+            <View style={{zIndex: 3}}>
               <Text style={{padding: 10}}>Batting team</Text>
               <DropDownPicker
                 items={teamArray}
@@ -214,8 +217,8 @@ export default class T20 extends Component {
                 }}
                 onChangeItem={(item) => this.setState({team_a: item.value})}
               />
-              <Text style={{padding: 10}}>Bowling team</Text>
-              <View>
+              <View style={{zIndex: 2}}>
+                <Text style={{padding: 10}}>Bowling team</Text>
                 <DropDownPicker
                   items={teamArray}
                   defaultValue="India"
@@ -237,7 +240,7 @@ export default class T20 extends Component {
                   onChangeItem={(item) => this.setState({team_b: item.value})}
                 />
               </View>
-              <View>
+              <View style={{zIndex: 1}}>
                 <Text style={{padding: 10}}>Venue</Text>
                 <DropDownPicker
                   items={venueArray}
@@ -406,8 +409,8 @@ export default class T20 extends Component {
                 <>
                   <CardViewWithImage
                     width={400}
-                    source={require('../assets/flags/Pakistan.png')}
-                    title={'Pakistan will win this match'}
+                    source={getFlagImages(this.getWinner())}
+                    title={this.getWinner() + ' will win this match'}
                     imageWidth={100}
                     imageHeight={100}
                     roundedImage={true}
@@ -416,7 +419,14 @@ export default class T20 extends Component {
                     // style={{shadowOpacity: 0.3}}
                   />
                   <CardView
-                    style={{width: '100%', height: 200, shadowOpacity: 0.3}}>
+                    style={{
+                      width: '100%',
+                      height: 200,
+                      shadowOpacity: 0.3,
+                      shadowColor: `'#808080'`,
+                      // shadowRadius: 1,
+                      borderRadius: 30,
+                    }}>
                     <Text
                       style={{
                         marginLeft: 15,
@@ -436,9 +446,13 @@ export default class T20 extends Component {
                     </Text>
                   </CardView>
                   <CardView style={{width: '100%', shadowOpacity: 4}}>
-                    <LineChart
+                    <BarChart
+                      style={{
+                        marginVertical: 8,
+                        borderRadius: 5,
+                      }}
                       data={{
-                        labels: ['10', '20', '30', '40', '50'],
+                        labels: ['4', '8', '12', '16', '20'],
                         datasets: [
                           {
                             data: teamAPrediction.predictions.runrates,
@@ -446,39 +460,97 @@ export default class T20 extends Component {
                           },
                         ],
                       }}
+                      segments={4}
                       width={Dimensions.get('window').width} // from react-native
                       height={220}
-                      verticalLabelRotation={30}
-                      // yAxisLabel="$"
-                      // yAxisSuffix="k"
+                      verticalLabelRotation={0}
+                      fromZero={false}
+                      chartConfig={{
+                        backgroundColor: '#000',
+                        backgroundGradientFrom: '#FFF',
+                        backgroundGradientTo: '#FFF',
+                        decimalPlaces: 1, // optional, defaults to 2dp
+                        color: (opacity = 6) => `rgb(205, 92, 92)`,
+                        labelColor: (opacity = 1) => `rgb(128, 128, 128)`,
+                      }}
+                    />
+                  </CardView>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                    }}>
+                    <LineChart
+                      data={{
+                        labels: ['4', '8', '12', '16', '20'],
+                        datasets: [
+                          {
+                            data: teamAPrediction.predictions.runrates,
+                            // data: [20, 45, 28, 80, 99, 43],
+                          },
+                        ],
+                      }}
+                      width={200} // from react-native
+                      height={150}
                       yAxisInterval={1} // optional, defaults to 1
+                      withDots={false}
+                      withInnerLines={false}
+                      withOuterLines={false}
+                      withVerticalLines={false}
+                      withHorizontalLines={false}
+                      withVerticalLabels={false}
+                      withHorizontalLabels={false}
+                      bezier
                       chartConfig={{
                         backgroundColor: '#e26a00',
                         backgroundGradientFrom: '#fb8c00',
                         backgroundGradientTo: '#ffa726',
-                        decimalPlaces: 2, // optional, defaults to 2dp
                         color: (opacity = 1) =>
                           `rgba(255, 255, 255, ${opacity})`,
                         labelColor: (opacity = 1) =>
                           `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                          borderRadius: 16,
-                        },
-                        propsForDots: {
-                          r: '6',
-                          strokeWidth: '2',
-                          stroke: '#ffa726',
-                        },
                       }}
                       style={{
-                        marginVertical: 8,
-                        borderRadius: 16,
+                        borderRadius: 5,
                       }}
                     />
-                  </CardView>
-                  <CardView
-                    style={{width: '100%', height: 200, shadowOpacity: 0.5}}>
-                    <PieChart
+                    <LineChart
+                      data={{
+                        labels: ['4', '8', '12', '16', '20'],
+                        datasets: [
+                          {
+                            data: teamAPrediction.predictions.runrates,
+                            // data: [20, 45, 28, 80, 99, 43],
+                          },
+                        ],
+                      }}
+                      width={200} // from react-native
+                      height={150}
+                      yAxisInterval={1} // optional, defaults to 1
+                      withDots={false}
+                      withInnerLines={false}
+                      withOuterLines={false}
+                      withVerticalLines={false}
+                      withHorizontalLines={false}
+                      withVerticalLabels={false}
+                      withHorizontalLabels={false}
+                      bezier
+                      chartConfig={{
+                        backgroundColor: '#33D1FF',
+                        backgroundGradientFrom: '#33D1FF',
+                        backgroundGradientTo: '#33D1FF',
+                        color: (opacity = 1) =>
+                          `rgba(255, 255, 255, ${opacity})`,
+                        labelColor: (opacity = 1) =>
+                          `rgba(255, 255, 255, ${opacity})`,
+                      }}
+                      style={{
+                        borderRadius: 5,
+                      }}
+                    />
+                  </View>
+                  {/* <CardView
+                    style={{width: '100%', height: 200, shadowOpacity: 0.5}}> */}
+                  {/* <PieChart
                       data={
                         [
                           {
@@ -510,8 +582,9 @@ export default class T20 extends Component {
                         marginBottom: 10,
                         borderRadius: 16,
                       }}
-                    />
-                  </CardView>
+                      /> */}
+
+                  {/* </CardView> */}
                 </>
               ) : null}
             </View>

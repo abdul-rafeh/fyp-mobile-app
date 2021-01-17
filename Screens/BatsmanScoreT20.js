@@ -17,7 +17,17 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
 import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
+import {Players} from '../Helpers/Players';
 import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
+const data = {
+  labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+  datasets: [
+    {
+      data: [89, 85, 96, 97, 94, 91, 88],
+    },
+  ],
+};
+const screenWidth = Dimensions.get('window').width;
 
 export default class BatsmanScoreT20 extends Component {
   constructor(props) {
@@ -32,15 +42,6 @@ export default class BatsmanScoreT20 extends Component {
       // bowling_team: "India",
       // batsman: "Mohammad Hafeez",
       // venue: "Sharjah Cricket Stadium",
-      overs: '',
-      balls: '',
-      scoreByStriker: '',
-      totalScoreByTeam: '',
-      totalFoursbyStriker: '',
-      totalSixesByStiker: '',
-      venue: '',
-      bowling_team: '',
-      striker: '',
     };
   }
   handleSubmit = async (
@@ -48,7 +49,7 @@ export default class BatsmanScoreT20 extends Component {
     balls,
     venue,
     bowling_team,
-    totalSixesByStiker,
+    totalSixesbyStriker,
     totalScoreByTeam,
     totalFoursbyStriker,
     striker,
@@ -59,24 +60,25 @@ export default class BatsmanScoreT20 extends Component {
       venue: venue,
       bowling_team: bowling_team,
       total_singles_by_striker_till_now:
-        scoreByStriker - (totalFoursbyStriker * 4 + totalSixesByStiker * 6),
+        scoreByStriker - (totalFoursbyStriker * 4 + totalSixesbyStriker * 6),
       striker: striker,
       total_batting_team_score_till_now: totalScoreByTeam,
-      total_sixes_by_striker_till_now: totalSixesByStiker,
+      total_sixes_by_striker_till_now: totalSixesbyStriker,
       total_fours_by_striker_till_now: totalFoursbyStriker,
       score_by_striker_till_now: scoreByStriker,
     };
-
-    values.total_singles_by_striker_till_now =
-      values.score_by_striker_till_now -
-      (values.total_fours_by_striker_till_now * 4 +
-        values.total_sixes_by_striker_till_now * 6);
+    console.log('*****checking the values t20 here*******');
+    console.log(values);
+    console.log('*****checking the values t20 here*******');
     this.setState({isLoading: true});
     let batsmanScores = await post(
       Config.URL.PREDICTION.PREDICT_BATSMAN_WITH_TARGET_T20,
       values,
     );
     this.setState({isLoading: false});
+    console.log('*****checking the resp t20 here*******');
+    console.log(batsmanScores);
+    console.log('*****checking the resp t20 here*******');
     if (batsmanScores && batsmanScores.status === 200) {
       this.setState({
         batsmanScores: batsmanScores.data.predictions,
@@ -88,24 +90,67 @@ export default class BatsmanScoreT20 extends Component {
     }
   };
   componentDidMount() {
-    this.setState({bating_team: 'Pakistan', striker: 'Azhar Ali'});
+    this.setState({
+      balls: 1,
+      overs: 10,
+      venue: 'Sheikh Zayed Stadium',
+      bowling_team: 'India',
+      totalSixesbyStriker: 0,
+      totalScoreByTeam: 100,
+      totalFoursbyStriker: 2,
+      striker: 'Azhar Ali',
+      scoreByStriker: 16,
+    });
   }
   render() {
     const {teamAPrediction, teamBPrediction} = this.state;
     var teamArray = [];
     var venueArray = [];
+    var playerArray = [{label: 'Azhar Ali', value: 'Azhar Ali'}];
     Teams.map((team) => {
       teamArray.push({label: team, value: team});
     });
     Venue.map((venue) => {
       venueArray.push({label: venue, value: venue});
     });
+    for (let key in Players) {
+      if (key === this.state.bating_team) {
+        playerArray = [];
+        Players[key].batsmen.map((item) =>
+          playerArray.push({label: item, value: item}),
+        );
+      }
+    }
+
     return (
       <View style={styles.container}>
         <Header {...this.props} />
         <ScrollView ref={(node) => (this.scroll = node)}>
+          <View style={{zIndex: 3}}>
+            <Text style={{padding: 10}}>Select Batsman</Text>
+            <DropDownPicker
+              items={playerArray}
+              defaultValue="Azhar Ali"
+              containerStyle={{height: 40}}
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                backgroundColor: '#fafafa',
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
+              }}
+              // eslint-disable-next-line react-native/no-inline-styles
+              dropDownStyle={{
+                backgroundColor: '#fafafa',
+                borderBottomLeftRadius: 20,
+                borderBottomRightRadius: 20,
+              }}
+              onChangeItem={(item) => this.setState({striker: item.value})}
+            />
+          </View>
           <Text style={{padding: 10}}>Bowling team</Text>
-          <View>
+          <View style={{zIndex: 2}}>
             <DropDownPicker
               items={teamArray}
               defaultValue="India"
@@ -127,7 +172,7 @@ export default class BatsmanScoreT20 extends Component {
               onChangeItem={(item) => this.setState({bowling_team: item.value})}
             />
           </View>
-          <View>
+          <View style={{zIndex: 1}}>
             <Text style={{padding: 10}}>Venue</Text>
             <DropDownPicker
               items={venueArray}
@@ -237,18 +282,51 @@ export default class BatsmanScoreT20 extends Component {
                 this.handleSubmit(
                   this.state.overs,
                   this.state.balls,
+                  this.state.venue,
                   this.state.bowling_team,
-                  this.state.scoreByStriker,
+                  this.state.totalSixesbyStriker,
                   this.state.totalScoreByTeam,
                   this.state.totalFoursbyStriker,
-                  this.state.venue,
-                  this.state.totalSixesbyStriker,
+                  this.state.striker,
+                  this.state.scoreByStriker,
                 );
                 this.scroll.scrollTo({y: 1000});
                 this.setState({scroll: true});
               }}>
               <Text style={(styles.loginText, {color: 'white'})}>Predict</Text>
             </TouchableOpacity>
+          </View>
+          <View>
+            <BarChart
+              style={{
+                marginVertical: 8,
+                borderRadius: 16,
+              }}
+              data={data}
+              segments={2}
+              width={screenWidth}
+              height={220}
+              verticalLabelRotation={0}
+              fromZero={true}
+              chartConfig={{
+                backgroundColor: '#e26a00',
+                backgroundGradientFrom: '#fb8c00',
+                backgroundGradientTo: '#ffa726',
+                decimalPlaces: 0, // optional, defaults to 2dp
+                color: (opacity = 3) => `rgba(200, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 30,
+                },
+                // formatYLabel: () => yLabelIterator.next().value,
+                data: data.datasets,
+                propsForDots: {
+                  r: '6',
+                  strokeWidth: '2',
+                  stroke: '#ffa726',
+                },
+              }}
+            />
           </View>
         </ScrollView>
       </View>
