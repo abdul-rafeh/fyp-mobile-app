@@ -48,7 +48,7 @@ export function DrawerContent(props) {
               )}
               label="Dashboard"
               onPress={() => {
-                props.navigation.navigate('DashboardScreen');
+                props.navigation.navigate('DashboardContent');
               }}
             />
             <DrawerItem

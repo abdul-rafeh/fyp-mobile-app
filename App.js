@@ -18,7 +18,21 @@ import {DrawerContent} from './Screens/DrawerContent';
 import Toast from 'react-native-simple-toast';
 import {post} from './Request';
 import Config from './Config';
+import {createStackNavigator} from '@react-navigation/stack';
+import LiveMatch from './Screens/LiveMatch';
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+function DashboardContent() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="DashboardScreen" component={DashboardScreen} />
+      <Stack.Screen name="LiveMatch" component={LiveMatch} />
+    </Stack.Navigator>
+  );
+}
 function App() {
   const initialLoginState = {
     isLoading: true,
@@ -149,25 +163,31 @@ function App() {
       </View>
     );
   }
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         {loginState.userToken !== null ? (
-          <Drawer.Navigator
-            drawerContent={(props) => <DrawerContent {...props} />}>
-            <Drawer.Screen name="DashboardScreen" component={DashboardScreen} />
-            <Drawer.Screen name="WhoWillWin" component={WhoWillWin} />
-            <Drawer.Screen name="T20Screen" component={T20Screen} />
-            <Drawer.Screen
-              name="BatsmanODIScreen"
-              component={BatsmanODIScreen}
-            />
-            <Drawer.Screen
-              name="BatsmanT20Screen"
-              component={BatsmanT20Screen}
-            />
-            {/* <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} /> */}
-          </Drawer.Navigator>
+          <>
+            <Drawer.Navigator
+              drawerContent={(props) => <DrawerContent {...props} />}>
+              <Drawer.Screen
+                name="DashboardContent"
+                component={DashboardContent}
+              />
+              <Drawer.Screen name="WhoWillWin" component={WhoWillWin} />
+              <Drawer.Screen name="T20Screen" component={T20Screen} />
+              <Drawer.Screen
+                name="BatsmanODIScreen"
+                component={BatsmanODIScreen}
+              />
+              <Drawer.Screen
+                name="BatsmanT20Screen"
+                component={BatsmanT20Screen}
+              />
+              {/* <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} /> */}
+            </Drawer.Navigator>
+          </>
         ) : (
           <AuthStackScreen />
         )}
