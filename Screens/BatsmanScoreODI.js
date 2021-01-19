@@ -129,301 +129,354 @@ export default class BatsmanScoreODI extends Component {
       <View style={styles.container}>
         <Header {...this.props} />
         <ScrollView ref={(node) => (this.scroll = node)}>
-          <View style={{zIndex: 4}}>
-            <Text style={{padding: 10}}>Select Batting Team</Text>
-            <DropDownPicker
-              items={teamArray}
-              defaultValue="Pakistan"
-              containerStyle={{height: 40}}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                backgroundColor: '#fafafa',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-              // eslint-disable-next-line react-native/no-inline-styles
-              dropDownStyle={{
-                backgroundColor: '#fafafa',
-                borderBottomLeftRadius: 20,
-                borderBottomRightRadius: 20,
-              }}
-              onChangeItem={(item) => this.setState({bating_team: item.value})}
-            />
-          </View>
-          <View style={{zIndex: 3}}>
-            <Text style={{padding: 10}}>Select Batsman</Text>
-            <DropDownPicker
-              items={playerArray}
-              defaultValue="Azhar Ali"
-              containerStyle={{height: 40}}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                backgroundColor: '#fafafa',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-              // eslint-disable-next-line react-native/no-inline-styles
-              dropDownStyle={{
-                backgroundColor: '#fafafa',
-                borderBottomLeftRadius: 20,
-                borderBottomRightRadius: 20,
-              }}
-              onChangeItem={(item) => this.setState({striker: item.value})}
-            />
-          </View>
-          <View style={{zIndex: 2}}>
-            <Text style={{padding: 10}}>Bowling team</Text>
-            <DropDownPicker
-              items={teamArray}
-              defaultValue="India"
-              containerStyle={{height: 40}}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                backgroundColor: '#fafafa',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-              // eslint-disable-next-line react-native/no-inline-styles
-              dropDownStyle={{
-                backgroundColor: '#fafafa',
-                borderBottomLeftRadius: 20,
-                borderBottomRightRadius: 20,
-              }}
-              onChangeItem={(item) => this.setState({bowling_team: item.value})}
-            />
-          </View>
-          <View style={{zIndex: 1}}>
-            <Text style={{padding: 10}}>Venue</Text>
-            <DropDownPicker
-              items={venueArray}
-              style={{
-                backgroundColor: '#fafafa',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-              // eslint-disable-next-line react-native/no-inline-styles
-              dropDownStyle={{
-                backgroundColor: '#fafafa',
-                borderBottomLeftRadius: 20,
-                borderBottomRightRadius: 20,
-              }}
-              defaultValue="Sharjah Cricket Stadium"
-              containerStyle={{height: 40}}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                backgroundColor: '#fafafa',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-              // eslint-disable-next-line react-native/no-inline-styles
-              dropDownStyle={{
-                backgroundColor: '#fafafa',
-                borderBottomLeftRadius: 20,
-                borderBottomRightRadius: 20,
-              }}
-              onChangeItem={(item) => this.setState({venue: item.value})}
-            />
-          </View>
-          <View
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start',
-              marginTop: 10,
-            }}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Overs"
-                placeholderTextColor="#808080"
-                onChangeText={(val) => this.setState({overs: val})}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Balls"
-                placeholderTextColor="#808080"
-                onChangeText={(val) => this.setState({balls: val})}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Score by Striker"
-                placeholderTextColor="#808080"
-                onChangeText={(val) => this.setState({scoreByStriker: val})}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Total Score by Team"
-                placeholderTextColor="#808080"
-                onChangeText={(val) => this.setState({totalScoreByTeam: val})}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Total Fours by Striker"
-                placeholderTextColor="#808080"
-                onChangeText={(val) =>
-                  this.setState({totalFoursbyStriker: val})
+          <View style={{marginBottom: 30}}>
+            <View style={{zIndex: 4}}>
+              <Text style={{padding: 10}}>Select Batting Team</Text>
+              <DropDownPicker
+                items={teamArray}
+                defaultValue="Pakistan"
+                containerStyle={{height: 40}}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  backgroundColor: '#fafafa',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  borderBottomLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                }}
+                // eslint-disable-next-line react-native/no-inline-styles
+                dropDownStyle={{
+                  backgroundColor: '#fafafa',
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                }}
+                onChangeItem={(item) =>
+                  this.setState({
+                    bating_team: item.value,
+                    scroll: false,
+                    loading: false,
+                  })
                 }
               />
             </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Total Sixes by Striker"
-                placeholderTextColor="#808080"
-                onChangeText={(val) =>
-                  this.setState({totalSixesbyStriker: val})
+            <View style={{zIndex: 3}}>
+              <Text style={{padding: 10}}>Select Batsman</Text>
+              <DropDownPicker
+                items={playerArray}
+                defaultValue="Azhar Ali"
+                containerStyle={{height: 40}}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  backgroundColor: '#fafafa',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  borderBottomLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                }}
+                // eslint-disable-next-line react-native/no-inline-styles
+                dropDownStyle={{
+                  backgroundColor: '#fafafa',
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                }}
+                onChangeItem={(item) =>
+                  this.setState({
+                    striker: item.value,
+                    scroll: false,
+                    loading: false,
+                  })
                 }
               />
             </View>
-          </View>
-          <View
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <TouchableOpacity
-              style={styles.loginBtn}
-              onPress={() => {
-                // eslint-disable-next-line no-lone-blocks
-                this.handleSubmit(
-                  this.state.overs,
-                  this.state.balls,
-                  this.state.venue,
-                  this.state.bowling_team,
-                  this.state.totalSixesbyStriker,
-                  this.state.totalScoreByTeam,
-                  this.state.totalFoursbyStriker,
-                  this.state.striker,
-                  this.state.scoreByStriker,
-                  this.state.bating_team,
-                );
+            <View style={{zIndex: 2}}>
+              <Text style={{padding: 10}}>Bowling team</Text>
+              <DropDownPicker
+                items={teamArray}
+                defaultValue="India"
+                containerStyle={{height: 40}}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  backgroundColor: '#fafafa',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  borderBottomLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                }}
+                // eslint-disable-next-line react-native/no-inline-styles
+                dropDownStyle={{
+                  backgroundColor: '#fafafa',
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                }}
+                onChangeItem={(item) =>
+                  this.setState({
+                    bowling_team: item.value,
+                    scroll: false,
+                    loading: false,
+                  })
+                }
+              />
+            </View>
+            <View style={{zIndex: 1}}>
+              <Text style={{padding: 10}}>Venue</Text>
+              <DropDownPicker
+                items={venueArray}
+                style={{
+                  backgroundColor: '#fafafa',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  borderBottomLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                }}
+                // eslint-disable-next-line react-native/no-inline-styles
+                dropDownStyle={{
+                  backgroundColor: '#fafafa',
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                }}
+                defaultValue="Sharjah Cricket Stadium"
+                containerStyle={{height: 40}}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  backgroundColor: '#fafafa',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  borderBottomLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                }}
+                // eslint-disable-next-line react-native/no-inline-styles
+                dropDownStyle={{
+                  backgroundColor: '#fafafa',
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                }}
+                onChangeItem={(item) =>
+                  this.setState({
+                    venue: item.value,
+                    scroll: false,
+                    loading: false,
+                  })
+                }
+              />
+            </View>
+            <View
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'flex-start',
+                marginTop: 10,
               }}>
-              <Text style={(styles.loginText, {color: 'white'})}>Predict</Text>
-            </TouchableOpacity>
-            {this.state.isLoading ? (
-              <ActivityIndicator />
-            ) : this.state.predicted ? (
-              <>
-                <Card containerStyle={{width: '100%'}}>
-                  <Card.Title style={{fontSize: 16}}>
-                    Standings Prediction
-                  </Card.Title>
-                  <Card.Divider />
-                  <DataTable style={{width: '100%'}}>
-                    <DataTable.Header>
-                      <DataTable.Title
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        Position
-                      </DataTable.Title>
-                      <DataTable.Title
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        Score
-                      </DataTable.Title>
-                    </DataTable.Header>
-                    {this.state.topPositions.map((i) => (
-                      <DataTable.Row>
-                        <DataTable.Cell
+              <View style={styles.inputView}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Overs"
+                  placeholderTextColor="#808080"
+                  onChangeText={(val) =>
+                    this.setState({overs: val, scroll: false, loading: false})
+                  }
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Balls"
+                  placeholderTextColor="#808080"
+                  onChangeText={(val) =>
+                    this.setState({balls: val, scroll: false, loading: false})
+                  }
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Score by Striker"
+                  placeholderTextColor="#808080"
+                  onChangeText={(val) =>
+                    this.setState({
+                      scoreByStriker: val,
+                      scroll: false,
+                      loading: false,
+                    })
+                  }
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Total Score by Team"
+                  placeholderTextColor="#808080"
+                  onChangeText={(val) =>
+                    this.setState({
+                      totalScoreByTeam: val,
+                      scroll: false,
+                      loading: false,
+                    })
+                  }
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Total Fours by Striker"
+                  placeholderTextColor="#808080"
+                  onChangeText={(val) =>
+                    this.setState({
+                      totalFoursbyStriker: val,
+                      scroll: false,
+                      loading: false,
+                    })
+                  }
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Total Sixes by Striker"
+                  placeholderTextColor="#808080"
+                  onChangeText={(val) =>
+                    this.setState({
+                      totalSixesbyStriker: val,
+                      scroll: false,
+                      loading: false,
+                    })
+                  }
+                />
+              </View>
+            </View>
+            <View
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={() => {
+                  // eslint-disable-next-line no-lone-blocks
+                  this.handleSubmit(
+                    this.state.overs,
+                    this.state.balls,
+                    this.state.venue,
+                    this.state.bowling_team,
+                    this.state.totalSixesbyStriker,
+                    this.state.totalScoreByTeam,
+                    this.state.totalFoursbyStriker,
+                    this.state.striker,
+                    this.state.scoreByStriker,
+                    this.state.bating_team,
+                  );
+                  this.setState({scroll: true});
+                }}>
+                <Text style={(styles.loginText, {color: 'white'})}>
+                  Predict
+                </Text>
+              </TouchableOpacity>
+              {this.state.isLoading ? (
+                <ActivityIndicator />
+              ) : this.state.predicted && this.state.scroll ? (
+                <>
+                  <Card containerStyle={{width: '100%'}}>
+                    <Card.Title style={{fontSize: 16}}>
+                      Standings Prediction
+                    </Card.Title>
+                    <Card.Divider />
+                    <DataTable style={{width: '100%'}}>
+                      <DataTable.Header>
+                        <DataTable.Title
                           style={{
                             justifyContent: 'center',
                             alignItems: 'flex-end',
                           }}>
-                          {i}
-                        </DataTable.Cell>
-                        <DataTable.Cell
+                          Position
+                        </DataTable.Title>
+                        <DataTable.Title
                           style={{
                             justifyContent: 'center',
                             alignItems: 'flex-end',
                           }}>
-                          {this.state.totalByBatsman[i]}
-                        </DataTable.Cell>
-                      </DataTable.Row>
-                    ))}
-                  </DataTable>
-                </Card>
-                <Card containerStyle={{width: '100%'}}>
-                  <Card.Title style={{fontSize: 16}}>
-                    Boundaries Prediction
-                  </Card.Title>
-                  <Card.Divider />
-                  <DataTable style={{width: '100%'}}>
-                    <DataTable.Header>
-                      <DataTable.Title
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        Position
-                      </DataTable.Title>
-                      <DataTable.Title
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        Fours
-                      </DataTable.Title>
-                      <DataTable.Title
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        Sixes
-                      </DataTable.Title>
-                    </DataTable.Header>
-                    {this.state.topPositions.map((i) => (
-                      <DataTable.Row>
-                        <DataTable.Cell
+                          Score
+                        </DataTable.Title>
+                      </DataTable.Header>
+                      {this.state.topPositions.map((i) => (
+                        <DataTable.Row>
+                          <DataTable.Cell
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'flex-end',
+                            }}>
+                            {i}
+                          </DataTable.Cell>
+                          <DataTable.Cell
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'flex-end',
+                            }}>
+                            {this.state.totalByBatsman[i]}
+                          </DataTable.Cell>
+                        </DataTable.Row>
+                      ))}
+                    </DataTable>
+                  </Card>
+                  <Card containerStyle={{width: '100%'}}>
+                    <Card.Title style={{fontSize: 16}}>
+                      Boundaries Prediction
+                    </Card.Title>
+                    <Card.Divider />
+                    <DataTable style={{width: '100%'}}>
+                      <DataTable.Header>
+                        <DataTable.Title
                           style={{
                             justifyContent: 'center',
                             alignItems: 'flex-end',
                           }}>
-                          {i}
-                        </DataTable.Cell>
-                        <DataTable.Cell
+                          Position
+                        </DataTable.Title>
+                        <DataTable.Title
                           style={{
                             justifyContent: 'center',
                             alignItems: 'flex-end',
                           }}>
-                          {this.state.foursByBatsman[i]}
-                        </DataTable.Cell>
-                        <DataTable.Cell
+                          Fours
+                        </DataTable.Title>
+                        <DataTable.Title
                           style={{
                             justifyContent: 'center',
                             alignItems: 'flex-end',
                           }}>
-                          {this.state.sixesByBatsman[i]}
-                        </DataTable.Cell>
-                      </DataTable.Row>
-                    ))}
-                  </DataTable>
-                </Card>
-              </>
-            ) : null}
+                          Sixes
+                        </DataTable.Title>
+                      </DataTable.Header>
+                      {this.state.topPositions.map((i) => (
+                        <DataTable.Row>
+                          <DataTable.Cell
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'flex-end',
+                            }}>
+                            {i}
+                          </DataTable.Cell>
+                          <DataTable.Cell
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'flex-end',
+                            }}>
+                            {this.state.foursByBatsman[i]}
+                          </DataTable.Cell>
+                          <DataTable.Cell
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'flex-end',
+                            }}>
+                            {this.state.sixesByBatsman[i]}
+                          </DataTable.Cell>
+                        </DataTable.Row>
+                      ))}
+                    </DataTable>
+                  </Card>
+                </>
+              ) : null}
+            </View>
           </View>
         </ScrollView>
       </View>

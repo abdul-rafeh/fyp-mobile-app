@@ -155,7 +155,7 @@ export default class WhoWillWin extends Component {
     Venue.map((venue) => {
       venueArray.push({label: venue, value: venue});
     });
-    if (this.state.isLoading === false) {
+    if (this.state.isLoading === false && this.state.scroll === true) {
       setTimeout(() => {
         this.scroll.scrollTo({y: 700});
       }, 1000);
@@ -166,33 +166,12 @@ export default class WhoWillWin extends Component {
         <View style={styles.container}>
           <Header {...this.props} />
           <ScrollView ref={(node) => (this.scroll = node)}>
-            <View style={{zIndex: 3}}>
-              <Text style={{padding: 10}}>Batting team</Text>
-              <DropDownPicker
-                items={teamArray}
-                defaultValue="Pakistan"
-                containerStyle={{height: 40}}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  backgroundColor: '#fafafa',
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderBottomLeftRadius: 10,
-                  borderBottomRightRadius: 10,
-                }}
-                // eslint-disable-next-line react-native/no-inline-styles
-                dropDownStyle={{
-                  backgroundColor: '#fafafa',
-                  borderBottomLeftRadius: 20,
-                  borderBottomRightRadius: 20,
-                }}
-                onChangeItem={(item) => this.setState({team_a: item.value})}
-              />
-              <Text style={{padding: 10}}>Bowling team</Text>
-              <View style={{zIndex: 2}}>
+            <View style={{marginBottom: 30}}>
+              <View style={{zIndex: 3}}>
+                <Text style={{padding: 10}}>Batting team</Text>
                 <DropDownPicker
                   items={teamArray}
-                  defaultValue="India"
+                  defaultValue="Pakistan"
                   containerStyle={{height: 40}}
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
@@ -208,299 +187,391 @@ export default class WhoWillWin extends Component {
                     borderBottomLeftRadius: 20,
                     borderBottomRightRadius: 20,
                   }}
-                  onChangeItem={(item) => this.setState({team_b: item.value})}
-                />
-              </View>
-              <View style={{zIndex: 1}}>
-                <Text style={{padding: 10}}>Venue</Text>
-                <DropDownPicker
-                  items={venueArray}
-                  style={{
-                    backgroundColor: '#fafafa',
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10,
-                  }}
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  dropDownStyle={{
-                    backgroundColor: '#fafafa',
-                    borderBottomLeftRadius: 20,
-                    borderBottomRightRadius: 20,
-                  }}
-                  defaultValue="Sharjah Cricket Stadium"
-                  containerStyle={{height: 40}}
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  style={{
-                    backgroundColor: '#fafafa',
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10,
-                  }}
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  dropDownStyle={{
-                    backgroundColor: '#fafafa',
-                    borderBottomLeftRadius: 20,
-                    borderBottomRightRadius: 20,
-                  }}
-                  onChangeItem={(item) => this.setState({venue: item.value})}
-                />
-              </View>
-            </View>
-            <View
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                alignItems: 'flex-start',
-                marginTop: 10,
-              }}>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Overs"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({overs: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Balls"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({balls: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Runs Till Now"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({runsTillNow: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Wickets Till Now"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({wicketsTillNow: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Fours Till Now"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({foursTillNow: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Sixes Till Now"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({sixesTillNow: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Wides Till Now"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({widesTillNow: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="No Balls Till Now"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({noBallsTillNow: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Runs Last 5 Overs"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) => this.setState({runLast5Overs: val})}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Wickets Last 5 Overs"
-                  placeholderTextColor="#808080"
-                  onChangeText={(val) =>
-                    this.setState({wicketsLast5Overs: val})
+                  onChangeItem={(item) =>
+                    this.setState({
+                      team_a: item.value,
+                      scroll: false,
+                      loading: false,
+                    })
                   }
                 />
+                <Text style={{padding: 10}}>Bowling team</Text>
+                <View style={{zIndex: 2}}>
+                  <DropDownPicker
+                    items={teamArray}
+                    defaultValue="India"
+                    containerStyle={{height: 40}}
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    style={{
+                      backgroundColor: '#fafafa',
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    dropDownStyle={{
+                      backgroundColor: '#fafafa',
+                      borderBottomLeftRadius: 20,
+                      borderBottomRightRadius: 20,
+                    }}
+                    onChangeItem={(item) =>
+                      this.setState({
+                        team_b: item.value,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={{zIndex: 1}}>
+                  <Text style={{padding: 10}}>Venue</Text>
+                  <DropDownPicker
+                    items={venueArray}
+                    style={{
+                      backgroundColor: '#fafafa',
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    dropDownStyle={{
+                      backgroundColor: '#fafafa',
+                      borderBottomLeftRadius: 20,
+                      borderBottomRightRadius: 20,
+                    }}
+                    defaultValue="Sharjah Cricket Stadium"
+                    containerStyle={{height: 40}}
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    style={{
+                      backgroundColor: '#fafafa',
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    dropDownStyle={{
+                      backgroundColor: '#fafafa',
+                      borderBottomLeftRadius: 20,
+                      borderBottomRightRadius: 20,
+                    }}
+                    onChangeItem={(item) =>
+                      this.setState({
+                        venue: item.value,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
               </View>
-            </View>
-
-            <View
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <TouchableOpacity
-                style={styles.loginBtn}
-                onPress={() => {
-                  // eslint-disable-next-line no-lone-blocks
-                  this.handleSubmit(
-                    this.state.overs,
-                    this.state.balls,
-                    this.state.team_a,
-                    this.state.team_b,
-                    this.state.runsTillNow,
-                    this.state.wicketsTillNow,
-                    this.state.foursTillNow,
-                    this.state.sixesTillNow,
-                    this.state.wideBallsTillNow,
-                    this.state.noBallsTillNow,
-                    this.state.runLast5Overs,
-                    this.state.wicketsLast5Overs,
-                    this.state.venue,
-                    this.state.target,
-                  );
+              <View
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'flex-start',
+                  marginTop: 10,
                 }}>
-                <Text style={(styles.loginText, {color: 'white'})}>
-                  Predict
-                </Text>
-              </TouchableOpacity>
-              {this.state.isLoading ? (
-                <ActivityIndicator />
-              ) : this.state.predicted ? (
-                <>
-                  <Card containerStyle={{width: '100%'}}>
-                    <Card.Title style={{fontSize: 16}}>
-                      Winner Team Prediction
-                    </Card.Title>
-                    <Card.Divider />
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Avatar
-                        size="large"
-                        source={getFlagImages(this.getWinner())}
-                        overlayContainerStyle={{backgroundColor: 'white'}}
-                        activeOpacity={0.7}
-                      />
-                      <TextElement style={{marginTop: 20, fontWeight: 'bold'}}>
-                        {this.getWinner()}
-                      </TextElement>
-                    </View>
-                  </Card>
-                  <Card
-                    containerStyle={{
-                      width: '100%',
-                    }}>
-                    <Card.Title style={{fontSize: 16}}>
-                      Batting Team Predicted Score
-                    </Card.Title>
-                    <Card.Divider />
-                    <LinearGradient
-                      colors={['#00ff59', '#89ff89', '#ffffff']}
-                      start={{x: 0.0, y: 0.5}}
-                      end={{x: 0.5, y: 1.0}}
-                      locations={[0.75, 0.5, 0.1]}
-                      // useAngle: true, angle: 45
-                    >
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Overs"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({overs: val, scroll: false, loading: false})
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Balls"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({balls: val, scroll: false, loading: false})
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Runs Till Now"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        runsTillNow: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Wickets Till Now"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        wicketsTillNow: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Fours Till Now"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        foursTillNow: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Sixes Till Now"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        sixesTillNow: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Wides Till Now"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        widesTillNow: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="No Balls Till Now"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        noBallsTillNow: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Runs Last 5 Overs"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        runLast5Overs: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Wickets Last 5 Overs"
+                    placeholderTextColor="#808080"
+                    onChangeText={(val) =>
+                      this.setState({
+                        wicketsLast5Overs: val,
+                        scroll: false,
+                        loading: false,
+                      })
+                    }
+                  />
+                </View>
+              </View>
+
+              <View
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <TouchableOpacity
+                  style={styles.loginBtn}
+                  onPress={() => {
+                    // eslint-disable-next-line no-lone-blocks
+                    this.handleSubmit(
+                      this.state.overs,
+                      this.state.balls,
+                      this.state.team_a,
+                      this.state.team_b,
+                      this.state.runsTillNow,
+                      this.state.wicketsTillNow,
+                      this.state.foursTillNow,
+                      this.state.sixesTillNow,
+                      this.state.wideBallsTillNow,
+                      this.state.noBallsTillNow,
+                      this.state.runLast5Overs,
+                      this.state.wicketsLast5Overs,
+                      this.state.venue,
+                      this.state.target,
+                    );
+                  }}>
+                  <Text style={(styles.loginText, {color: 'white'})}>
+                    Predict
+                  </Text>
+                </TouchableOpacity>
+                {this.state.isLoading ? (
+                  <ActivityIndicator />
+                ) : this.state.predicted && this.state.scroll ? (
+                  <>
+                    <Card containerStyle={{width: '100%'}}>
+                      <Card.Title style={{fontSize: 16}}>
+                        Winner Team Prediction
+                      </Card.Title>
+                      <Card.Divider />
                       <View
                         style={{
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}>
-                        <Text
-                          style={{
-                            fontSize: 40,
-                            fontWeight: 'bold',
-                            padding: 20,
-                            color: '#808080',
-                          }}>
-                          {teamAPrediction.predictions.total}
-                        </Text>
+                        <Avatar
+                          size="large"
+                          source={getFlagImages(this.getWinner())}
+                          overlayContainerStyle={{backgroundColor: 'white'}}
+                          activeOpacity={0.7}
+                        />
+                        <TextElement
+                          style={{marginTop: 20, fontWeight: 'bold'}}>
+                          {this.getWinner()}
+                        </TextElement>
                       </View>
-                    </LinearGradient>
-                  </Card>
-                  <Card containerStyle={{width: '100%'}}>
-                    <Card.Title style={{fontSize: 16}}>
-                      Run Rate Prediction
-                    </Card.Title>
-                    <Card.Divider />
-                    <BarChart
-                      data={{
-                        labels: ['10', '20', '30', '40', '50'],
-                        datasets: [
-                          {
-                            data: teamAPrediction.predictions.runrates,
-                          },
-                        ],
-                      }}
-                      segments={4}
-                      width={375} // from react-native
-                      height={220}
-                      verticalLabelRotation={0}
-                      fromZero={false}
-                      chartConfig={{
-                        backgroundColor: '#000',
-                        backgroundGradientFrom: '#FFF',
-                        backgroundGradientTo: '#FFF',
-                        decimalPlaces: 1, // optional, defaults to 2dp
-                        color: (opacity = 6) => `rgb(205, 92, 92)`,
-                        labelColor: (opacity = 1) => `rgb(128,0,0)`,
-                      }}
-                    />
-                  </Card>
-                  <Card containerStyle={{width: '100%'}}>
-                    <Card.Title style={{fontSize: 16}}>
-                      Predicted Boundries
-                    </Card.Title>
-                    <Card.Divider />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
+                    </Card>
+                    <Card
+                      containerStyle={{
+                        width: '100%',
                       }}>
-                      <Card containerStyle={{width: '50%'}}>
-                        <Card.Title style={{fontSize: 12}}>
-                          Predicted Fours
-                        </Card.Title>
-                        <Card.Divider />
+                      <Card.Title style={{fontSize: 16}}>
+                        Batting Team Predicted Score
+                      </Card.Title>
+                      <Card.Divider />
+                      <LinearGradient
+                        colors={['#00ff59', '#89ff89', '#ffffff']}
+                        start={{x: 0.0, y: 0.5}}
+                        end={{x: 0.5, y: 1.0}}
+                        locations={[0.75, 0.5, 0.1]}
+                        // useAngle: true, angle: 45
+                      >
                         <View
                           style={{
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}>
-                          <TextElement h1>
-                            {teamAPrediction.predictions.total_fours}
-                          </TextElement>
+                          <Text
+                            style={{
+                              fontSize: 40,
+                              fontWeight: 'bold',
+                              padding: 20,
+                              color: '#808080',
+                            }}>
+                            {teamAPrediction.predictions.total}
+                          </Text>
                         </View>
-                      </Card>
-                      <Card containerStyle={{width: '50%'}}>
-                        <Card.Title style={{fontSize: 12}}>
-                          Predicted Sixes
-                        </Card.Title>
-                        <Card.Divider />
-                        <View
-                          style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}>
-                          <TextElement h1>
-                            {teamAPrediction.predictions.total_sixes}
-                          </TextElement>
-                        </View>
-                      </Card>
-                    </View>
-                  </Card>
-                </>
-              ) : null}
+                      </LinearGradient>
+                    </Card>
+                    <Card containerStyle={{width: '100%'}}>
+                      <Card.Title style={{fontSize: 16}}>
+                        Run Rate Prediction
+                      </Card.Title>
+                      <Card.Divider />
+                      <BarChart
+                        data={{
+                          labels: ['10', '20', '30', '40', '50'],
+                          datasets: [
+                            {
+                              data: teamAPrediction.predictions.runrates,
+                            },
+                          ],
+                        }}
+                        segments={4}
+                        width={375} // from react-native
+                        height={220}
+                        verticalLabelRotation={0}
+                        fromZero={false}
+                        chartConfig={{
+                          backgroundColor: '#000',
+                          backgroundGradientFrom: '#FFF',
+                          backgroundGradientTo: '#FFF',
+                          decimalPlaces: 1, // optional, defaults to 2dp
+                          color: (opacity = 6) => `rgb(205, 92, 92)`,
+                          labelColor: (opacity = 1) => `rgb(128,0,0)`,
+                        }}
+                      />
+                    </Card>
+                    <Card containerStyle={{width: '100%'}}>
+                      <Card.Title style={{fontSize: 16}}>
+                        Predicted Boundries
+                      </Card.Title>
+                      <Card.Divider />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly',
+                        }}>
+                        <Card containerStyle={{width: '50%'}}>
+                          <Card.Title style={{fontSize: 12}}>
+                            Predicted Fours
+                          </Card.Title>
+                          <Card.Divider />
+                          <View
+                            style={{
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}>
+                            <TextElement h1>
+                              {teamAPrediction.predictions.total_fours}
+                            </TextElement>
+                          </View>
+                        </Card>
+                        <Card containerStyle={{width: '50%'}}>
+                          <Card.Title style={{fontSize: 12}}>
+                            Predicted Sixes
+                          </Card.Title>
+                          <Card.Divider />
+                          <View
+                            style={{
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}>
+                            <TextElement h1>
+                              {teamAPrediction.predictions.total_sixes}
+                            </TextElement>
+                          </View>
+                        </Card>
+                      </View>
+                    </Card>
+                  </>
+                ) : null}
+              </View>
             </View>
           </ScrollView>
         </View>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
   useTheme,
@@ -15,16 +15,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../Components/context';
 
 export function DrawerContent(props) {
-  // const getEmail = async () => {
-  //   const [email, setEmail] = useState(null);
-  //   let getEmailNow = null;
-  //   getEmailNow = await AsyncStorage.getItem('email');
-  //   setEmail(getEmailNow);
-  // };
+  const [email, setEmail] = useState(null);
+  useEffect(() => {
+    async function getEmail() {
+      let getEmailNow = null;
+      getEmailNow = await AsyncStorage.getItem('email');
+      setEmail(getEmailNow);
+    }
+    getEmail();
+  }, []);
+
   const paperTheme = useTheme();
 
   const {signOut} = React.useContext(AuthContext);
-  // const {email} = getEmail();
+
   return (
     <View style={{flex: 1}}>
       {/* {getEmail} */}
@@ -34,7 +38,7 @@ export function DrawerContent(props) {
             <View style={{flexDirection: 'row', marginTop: 15}}>
               <View style={{marginLeft: 15, flexDirection: 'column'}}>
                 <Caption style={styles.caption}>Welcome back, </Caption>
-                <Title style={styles.title}>rafeh@gmail.com</Title>
+                <Title style={styles.title}>{email}</Title>
               </View>
             </View>
           </View>

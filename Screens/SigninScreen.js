@@ -37,10 +37,7 @@ export function SigninScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      {/* <Image
-        source={require('../images/sample-logo-design-png-3.png')}
-        style={styles.logo}
-      /> */}
+      <Image source={require('../assets/logo.png')} style={styles.logo} />
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
@@ -110,7 +107,7 @@ const styles = StyleSheet.create({
     height: 50,
     color: 'black',
   },
-  logo: {resizeMode: 'contain', height: 200, width: 200, marginBottom: '18%'},
+  logo: {resizeMode: 'contain', height: 200, width: 200, marginBottom: 40},
 });
 
 export default SigninScreen;
