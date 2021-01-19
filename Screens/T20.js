@@ -18,33 +18,8 @@ import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
 import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
 import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
-const chartConfig = {
-  backgroundGradientFrom: '#1E2923',
-  backgroundGradientFromOpacity: 0,
-  backgroundGradientTo: '#08130D',
-  backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-  // useShadowColorFromDataset: false, // optional
-  // horizontalOffset: 50,
-  // width: '100%',
-  // height: 20,
-};
-const piedata = [
-  {
-    name: 'Seoul',
-    population: 21500000,
-    color: 'rgba(131, 167, 234, 1)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Toronto',
-    population: 2800000,
-    color: '#F00',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-];
+import LinearGradient from 'react-native-linear-gradient';
+import {Card, Avatar, Text as TextElement} from 'react-native-elements';
 export default class T20 extends Component {
   constructor(props) {
     super(props);
@@ -118,9 +93,6 @@ export default class T20 extends Component {
     };
 
     this.setState({isLoading: true});
-    console.log('******* HELLO ******');
-    console.log(dataA);
-    console.log('******* HELLO ******');
     let teamAPrediction = await post(
       Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET_T20,
       dataA,
@@ -153,12 +125,6 @@ export default class T20 extends Component {
       dataB,
     );
 
-    console.log('***************checking data Team A*****************');
-    console.log(teamAPrediction);
-    console.log('***************checking data Team A*****************');
-    console.log('***************checking data Team b*****************');
-    console.log(teamBPrediction);
-    console.log('***************checking data Team b*****************');
     if (teamAPrediction && teamBPrediction) {
       this.setState({
         teamAPrediction: teamAPrediction,
@@ -190,6 +156,11 @@ export default class T20 extends Component {
     Venue.map((venue) => {
       venueArray.push({label: venue, value: venue});
     });
+    if (this.state.isLoading === false) {
+      setTimeout(() => {
+        this.scroll.scrollTo({y: 700});
+      }, 1000);
+    }
     return (
       <>
         <View style={styles.container}>
@@ -283,7 +254,7 @@ export default class T20 extends Component {
                 flexDirection: 'row',
                 flexWrap: 'wrap',
                 alignItems: 'flex-start',
-                padding: 10,
+                marginTop: 10,
               }}>
               <View style={styles.inputView}>
                 <TextInput
@@ -395,7 +366,6 @@ export default class T20 extends Component {
                     this.state.venue,
                     this.state.target,
                   );
-                  this.scroll.scrollTo({y: 1000});
                   this.setState({scroll: true});
                 }}>
                 <Text style={(styles.loginText, {color: 'white'})}>
@@ -407,45 +377,64 @@ export default class T20 extends Component {
                 <ActivityIndicator />
               ) : this.state.predicted && this.state.scroll ? (
                 <>
-                  <CardViewWithImage
-                    width={400}
-                    source={getFlagImages(this.getWinner())}
-                    title={this.getWinner() + ' will win this match'}
-                    imageWidth={100}
-                    imageHeight={100}
-                    roundedImage={true}
-                    roundedImageValue={50}
-                    imageMargin={{top: 10}}
-                    // style={{shadowOpacity: 0.3}}
-                  />
-                  <CardView
-                    style={{
+                  <Card containerStyle={{width: '100%'}}>
+                    <Card.Title style={{fontSize: 16}}>
+                      Winner Team Prediction
+                    </Card.Title>
+                    <Card.Divider />
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Avatar
+                        size="large"
+                        source={getFlagImages(this.getWinner())}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                        activeOpacity={0.7}
+                      />
+                      <TextElement style={{marginTop: 20, fontWeight: 'bold'}}>
+                        {this.getWinner()}
+                      </TextElement>
+                    </View>
+                  </Card>
+                  <Card
+                    containerStyle={{
                       width: '100%',
-                      height: 200,
-                      shadowOpacity: 0.3,
-                      shadowColor: `'#808080'`,
-                      // shadowRadius: 1,
-                      borderRadius: 30,
                     }}>
-                    <Text
-                      style={{
-                        marginLeft: 15,
-                        fontSize: 15,
-                        fontWeight: 'bold',
-                      }}>
-                      TOTAL PREDCITED SCORE:
-                    </Text>
-                    <Text
-                      style={{
-                        marginLeft: 150,
-                        fontSize: 40,
-                        fontWeight: 'bold',
-                        padding: 20,
-                      }}>
-                      {teamAPrediction.predictions.total}
-                    </Text>
-                  </CardView>
-                  <CardView style={{width: '100%', shadowOpacity: 4}}>
+                    <Card.Title style={{fontSize: 16}}>
+                      Batting Team Predicted Score
+                    </Card.Title>
+                    <Card.Divider />
+                    <LinearGradient
+                      colors={['#00ff59', '#89ff89', '#ffffff']}
+                      start={{x: 0.0, y: 0.5}}
+                      end={{x: 0.5, y: 1.0}}
+                      locations={[0.75, 0.5, 0.1]}
+                      // useAngle: true, angle: 45
+                    >
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: 40,
+                            fontWeight: 'bold',
+                            padding: 20,
+                            color: '#808080',
+                          }}>
+                          {teamAPrediction.predictions.total}
+                        </Text>
+                      </View>
+                    </LinearGradient>
+                  </Card>
+                  <Card containerStyle={{width: '100%'}}>
+                    <Card.Title style={{fontSize: 16}}>
+                      Run Rate Prediction
+                    </Card.Title>
+                    <Card.Divider />
                     <BarChart
                       style={{
                         marginVertical: 8,
@@ -461,7 +450,7 @@ export default class T20 extends Component {
                         ],
                       }}
                       segments={4}
-                      width={Dimensions.get('window').width} // from react-native
+                      width={375} // from react-native
                       height={220}
                       verticalLabelRotation={0}
                       fromZero={false}
@@ -474,117 +463,50 @@ export default class T20 extends Component {
                         labelColor: (opacity = 1) => `rgb(128, 128, 128)`,
                       }}
                     />
-                  </CardView>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                    }}>
-                    <LineChart
-                      data={{
-                        labels: ['4', '8', '12', '16', '20'],
-                        datasets: [
-                          {
-                            data: teamAPrediction.predictions.runrates,
-                            // data: [20, 45, 28, 80, 99, 43],
-                          },
-                        ],
-                      }}
-                      width={200} // from react-native
-                      height={150}
-                      yAxisInterval={1} // optional, defaults to 1
-                      withDots={false}
-                      withInnerLines={false}
-                      withOuterLines={false}
-                      withVerticalLines={false}
-                      withHorizontalLines={false}
-                      withVerticalLabels={false}
-                      withHorizontalLabels={false}
-                      bezier
-                      chartConfig={{
-                        backgroundColor: '#e26a00',
-                        backgroundGradientFrom: '#fb8c00',
-                        backgroundGradientTo: '#ffa726',
-                        color: (opacity = 1) =>
-                          `rgba(255, 255, 255, ${opacity})`,
-                        labelColor: (opacity = 1) =>
-                          `rgba(255, 255, 255, ${opacity})`,
-                      }}
-                      style={{
-                        borderRadius: 5,
-                      }}
-                    />
-                    <LineChart
-                      data={{
-                        labels: ['4', '8', '12', '16', '20'],
-                        datasets: [
-                          {
-                            data: teamAPrediction.predictions.runrates,
-                            // data: [20, 45, 28, 80, 99, 43],
-                          },
-                        ],
-                      }}
-                      width={200} // from react-native
-                      height={150}
-                      yAxisInterval={1} // optional, defaults to 1
-                      withDots={false}
-                      withInnerLines={false}
-                      withOuterLines={false}
-                      withVerticalLines={false}
-                      withHorizontalLines={false}
-                      withVerticalLabels={false}
-                      withHorizontalLabels={false}
-                      bezier
-                      chartConfig={{
-                        backgroundColor: '#33D1FF',
-                        backgroundGradientFrom: '#33D1FF',
-                        backgroundGradientTo: '#33D1FF',
-                        color: (opacity = 1) =>
-                          `rgba(255, 255, 255, ${opacity})`,
-                        labelColor: (opacity = 1) =>
-                          `rgba(255, 255, 255, ${opacity})`,
-                      }}
-                      style={{
-                        borderRadius: 5,
-                      }}
-                    />
-                  </View>
-                  {/* <CardView
-                    style={{width: '100%', height: 200, shadowOpacity: 0.5}}> */}
-                  {/* <PieChart
-                      data={
-                        [
-                          {
-                            name: 'Total Fours',
-                            population: teamAPrediction.predictions.total_fours,
-                            color: 'rgba(131, 167, 234, 1)',
-                            legendFontColor: '#7F7F7F',
-                            legendFontSize: 15,
-                          },
-                          {
-                            name: 'Total Sixes',
-                            population: teamAPrediction.predictions.total_sixes,
-                            color: '#F00',
-                            legendFontColor: '#7F7F7F',
-                            legendFontSize: 15,
-                          },
-                        ]
-                        // piedata
-                      }
-                      width={Dimensions.get('window').width - 16}
-                      height={250}
-                      chartConfig={chartConfig}
-                      accessor={'population'}
-                      backgroundColor={'transparent'}
-                      paddingLeft={'30'}
-                      center={[10, 50]}
-                      absolute
-                      style={{
-                        marginBottom: 10,
-                        borderRadius: 16,
-                      }}
-                      /> */}
+                  </Card>
 
-                  {/* </CardView> */}
+                  <Card containerStyle={{width: '100%'}}>
+                    <Card.Title style={{fontSize: 16}}>
+                      Predicted Boundries
+                    </Card.Title>
+                    <Card.Divider />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-evenly',
+                      }}>
+                      <Card containerStyle={{width: '50%'}}>
+                        <Card.Title style={{fontSize: 12}}>
+                          Predicted Fours
+                        </Card.Title>
+                        <Card.Divider />
+                        <View
+                          style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                          <TextElement h1>
+                            {teamAPrediction.predictions.total_fours}
+                          </TextElement>
+                        </View>
+                      </Card>
+                      <Card containerStyle={{width: '50%'}}>
+                        <Card.Title style={{fontSize: 12}}>
+                          Predicted Sixes
+                        </Card.Title>
+                        <Card.Divider />
+                        <View
+                          style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                          <TextElement h1>
+                            {teamAPrediction.predictions.total_sixes}
+                          </TextElement>
+                        </View>
+                      </Card>
+                    </View>
+                  </Card>
                 </>
               ) : null}
             </View>
@@ -600,6 +522,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     // alignItems: 'center',
     // justifyContent: 'center',
+    paddingHorizontal: 8,
   },
   forgot: {
     color: '#808080',

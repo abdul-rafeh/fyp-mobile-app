@@ -24,11 +24,14 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 function DashboardContent() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Stack.Screen name="DashboardScreen" component={DashboardScreen} />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="DashboardScreen"
+        component={DashboardScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="LiveMatch" component={LiveMatch} />
     </Stack.Navigator>
   );
@@ -45,6 +48,7 @@ function App() {
         return {
           ...prevState,
           userToken: action.token,
+          email: action.email,
           isLoading: false,
         };
       case 'SIGNIN':
@@ -89,9 +93,10 @@ function App() {
               console.log(res);
               try {
                 userToken = res.accessToken;
+                email = res.email;
                 // role = res.roles;
                 AsyncStorage.setItem('userToken', userToken);
-                // AsyncStorage.setItem('role', role);
+                AsyncStorage.setItem('email', email);
                 dispatch({type: 'SIGNIN', id: email, token: userToken});
               } catch (e) {
                 console.log(e);
@@ -146,15 +151,16 @@ function App() {
   useEffect(() => {
     setTimeout(async () => {
       let userToken = null;
+      let email = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
       } catch (e) {
         console.log(e);
       }
-      dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
+
+      dispatch({type: 'RETRIEVE_TOKEN', email: email, token: userToken});
     }, 1000);
   }, []);
-
   if (loginState.isLoading) {
     return (
       // eslint-disable-next-line react-native/no-inline-styles
@@ -185,7 +191,6 @@ function App() {
                 name="BatsmanT20Screen"
                 component={BatsmanT20Screen}
               />
-              {/* <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} /> */}
             </Drawer.Navigator>
           </>
         ) : (

@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   FlatList,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {get} from '../Request.js';
 import Header from './Header';
@@ -45,7 +46,7 @@ export default class DashboardScreen extends Component {
   render() {
     const {allMatches} = this.state;
     return (
-      <View>
+      <SafeAreaView>
         <Header {...this.props} />
         {this.state.isLoading ? (
           <ActivityIndicator />
@@ -97,7 +98,7 @@ export default class DashboardScreen extends Component {
             </Card>
           </ScrollView>
         )}
-      </View>
+      </SafeAreaView>
     );
   }
 }

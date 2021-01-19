@@ -19,14 +19,8 @@ import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
 import {Players} from '../Helpers/Players';
 import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
-const data = {
-  labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-  datasets: [
-    {
-      data: [89, 85, 96, 97, 94, 91, 88],
-    },
-  ],
-};
+import {Card, Avatar, Text as TextElement} from 'react-native-elements';
+import {DataTable} from 'react-native-paper';
 const screenWidth = Dimensions.get('window').width;
 
 export default class BatsmanScoreT20 extends Component {
@@ -54,6 +48,7 @@ export default class BatsmanScoreT20 extends Component {
     totalFoursbyStriker,
     striker,
     scoreByStriker,
+    bating_team,
   ) => {
     const values = {
       over: overs + '.' + balls,
@@ -66,22 +61,25 @@ export default class BatsmanScoreT20 extends Component {
       total_sixes_by_striker_till_now: totalSixesbyStriker,
       total_fours_by_striker_till_now: totalFoursbyStriker,
       score_by_striker_till_now: scoreByStriker,
+      bating_team: bating_team,
     };
-    console.log('*****checking the values t20 here*******');
-    console.log(values);
-    console.log('*****checking the values t20 here*******');
     this.setState({isLoading: true});
     let batsmanScores = await post(
       Config.URL.PREDICTION.PREDICT_BATSMAN_WITH_TARGET_T20,
       values,
     );
     this.setState({isLoading: false});
-    console.log('*****checking the resp t20 here*******');
-    console.log(batsmanScores);
-    console.log('*****checking the resp t20 here*******');
-    if (batsmanScores && batsmanScores.status === 200) {
+    if (batsmanScores) {
+      let topPositions = batsmanScores.predictions.top_positions.map(
+        (item) => item - 1,
+      );
+      topPositions.sort();
       this.setState({
-        batsmanScores: batsmanScores.data.predictions,
+        batsmanScores: batsmanScores.predictions,
+        topPositions,
+        totalByBatsman: batsmanScores.predictions.total,
+        foursByBatsman: batsmanScores.predictions.total_fours,
+        sixesByBatsman: batsmanScores.predictions.total_sixes,
         isLoading: false,
         predicted: true,
       });
@@ -100,6 +98,7 @@ export default class BatsmanScoreT20 extends Component {
       totalFoursbyStriker: 2,
       striker: 'Azhar Ali',
       scoreByStriker: 16,
+      bating_team: 'Pakistan',
     });
   }
   render() {
@@ -122,10 +121,39 @@ export default class BatsmanScoreT20 extends Component {
       }
     }
 
+    if (this.state.isLoading === false) {
+      setTimeout(() => {
+        this.scroll.scrollTo({y: 700});
+      }, 1000);
+    }
+
     return (
       <View style={styles.container}>
         <Header {...this.props} />
         <ScrollView ref={(node) => (this.scroll = node)}>
+          <View style={{zIndex: 4}}>
+            <Text style={{padding: 10}}>Select Batting Team</Text>
+            <DropDownPicker
+              items={teamArray}
+              defaultValue="Pakistan"
+              containerStyle={{height: 40}}
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                backgroundColor: '#fafafa',
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
+              }}
+              // eslint-disable-next-line react-native/no-inline-styles
+              dropDownStyle={{
+                backgroundColor: '#fafafa',
+                borderBottomLeftRadius: 20,
+                borderBottomRightRadius: 20,
+              }}
+              onChangeItem={(item) => this.setState({bating_team: item.value})}
+            />
+          </View>
           <View style={{zIndex: 3}}>
             <Text style={{padding: 10}}>Select Batsman</Text>
             <DropDownPicker
@@ -214,7 +242,7 @@ export default class BatsmanScoreT20 extends Component {
               flexDirection: 'row',
               flexWrap: 'wrap',
               alignItems: 'flex-start',
-              padding: 10,
+              marginTop: 10,
             }}>
             <View style={styles.inputView}>
               <TextInput
@@ -289,44 +317,117 @@ export default class BatsmanScoreT20 extends Component {
                   this.state.totalFoursbyStriker,
                   this.state.striker,
                   this.state.scoreByStriker,
+                  this.state.bating_team,
                 );
                 this.scroll.scrollTo({y: 1000});
                 this.setState({scroll: true});
               }}>
               <Text style={(styles.loginText, {color: 'white'})}>Predict</Text>
             </TouchableOpacity>
-          </View>
-          <View>
-            <BarChart
-              style={{
-                marginVertical: 8,
-                borderRadius: 16,
-              }}
-              data={data}
-              segments={2}
-              width={screenWidth}
-              height={220}
-              verticalLabelRotation={0}
-              fromZero={true}
-              chartConfig={{
-                backgroundColor: '#e26a00',
-                backgroundGradientFrom: '#fb8c00',
-                backgroundGradientTo: '#ffa726',
-                decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 3) => `rgba(200, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 30,
-                },
-                // formatYLabel: () => yLabelIterator.next().value,
-                data: data.datasets,
-                propsForDots: {
-                  r: '6',
-                  strokeWidth: '2',
-                  stroke: '#ffa726',
-                },
-              }}
-            />
+            {this.state.isLoading ? (
+              <ActivityIndicator />
+            ) : this.state.predicted ? (
+              <>
+                <Card containerStyle={{width: '100%'}}>
+                  <Card.Title style={{fontSize: 16}}>
+                    Standings Prediction
+                  </Card.Title>
+                  <Card.Divider />
+                  <DataTable style={{width: '100%'}}>
+                    <DataTable.Header>
+                      <DataTable.Title
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        Position
+                      </DataTable.Title>
+                      <DataTable.Title
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        Score
+                      </DataTable.Title>
+                    </DataTable.Header>
+                    {this.state.topPositions.map((i) => (
+                      <DataTable.Row>
+                        <DataTable.Cell
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          {i}
+                        </DataTable.Cell>
+                        <DataTable.Cell
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          {this.state.totalByBatsman[i]}
+                        </DataTable.Cell>
+                      </DataTable.Row>
+                    ))}
+                  </DataTable>
+                </Card>
+                <Card containerStyle={{width: '100%'}}>
+                  <Card.Title style={{fontSize: 16}}>
+                    Boundaries Prediction
+                  </Card.Title>
+                  <Card.Divider />
+                  <DataTable style={{width: '100%'}}>
+                    <DataTable.Header>
+                      <DataTable.Title
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        Position
+                      </DataTable.Title>
+                      <DataTable.Title
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        Fours
+                      </DataTable.Title>
+                      <DataTable.Title
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        Sixes
+                      </DataTable.Title>
+                    </DataTable.Header>
+                    {this.state.topPositions.map((i) => (
+                      <DataTable.Row>
+                        <DataTable.Cell
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          {i}
+                        </DataTable.Cell>
+                        <DataTable.Cell
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          {this.state.foursByBatsman[i]}
+                        </DataTable.Cell>
+                        <DataTable.Cell
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          {this.state.sixesByBatsman[i]}
+                        </DataTable.Cell>
+                      </DataTable.Row>
+                    ))}
+                  </DataTable>
+                </Card>
+              </>
+            ) : null}
           </View>
         </ScrollView>
       </View>
@@ -339,6 +440,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     // alignItems: 'center',
     // justifyContent: 'center',
+    paddingHorizontal: 8,
   },
   forgot: {
     color: '#808080',
