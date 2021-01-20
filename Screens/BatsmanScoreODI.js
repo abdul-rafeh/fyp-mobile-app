@@ -12,13 +12,13 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Header from './Header';
-import {Teams, Venue} from '../Helpers/Teams';
+import {ODI_TEAMS as Teams, VENUE_ODI as Venue} from '../Helpers/Teams';
 import Config from '../Config';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
 import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
-import {Players} from '../Helpers/Players';
+import {PLAYERS_ODI as Players} from '../Helpers/Players';
 import {Card, Avatar, Text as TextElement} from 'react-native-elements';
 import {DataTable} from 'react-native-paper';
 export default class BatsmanScoreODI extends Component {
@@ -104,7 +104,7 @@ export default class BatsmanScoreODI extends Component {
     const {teamAPrediction, teamBPrediction} = this.state;
     var teamArray = [];
     var venueArray = [];
-    var playerArray = [{label: 'Azhar Ali', value: 'Azhar Ali'}];
+    var playerArray = [{label: 'Select Player', value: 'Select Player'}];
     Teams.map((team) => {
       teamArray.push({label: team, value: team});
     });
@@ -115,9 +115,9 @@ export default class BatsmanScoreODI extends Component {
     for (let key in Players) {
       if (key === this.state.bating_team) {
         playerArray = [];
-        Players[key].batsmen.map((item) =>
-          playerArray.push({label: item, value: item}),
-        );
+        Players[key].striker
+          .sort()
+          .map((item) => playerArray.push({label: item, value: item}));
       }
     }
     if (this.state.isLoading === false) {
@@ -163,7 +163,7 @@ export default class BatsmanScoreODI extends Component {
               <Text style={{padding: 10}}>Select Batsman</Text>
               <DropDownPicker
                 items={playerArray}
-                defaultValue="Azhar Ali"
+                defaultValue="Select Player"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
@@ -192,7 +192,7 @@ export default class BatsmanScoreODI extends Component {
               <Text style={{padding: 10}}>Bowling team</Text>
               <DropDownPicker
                 items={teamArray}
-                defaultValue="India"
+                defaultValue="Select Team"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
@@ -234,7 +234,7 @@ export default class BatsmanScoreODI extends Component {
                   borderBottomLeftRadius: 20,
                   borderBottomRightRadius: 20,
                 }}
-                defaultValue="Sharjah Cricket Stadium"
+                defaultValue="Select Venue"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{

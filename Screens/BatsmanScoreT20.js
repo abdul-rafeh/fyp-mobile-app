@@ -11,13 +11,13 @@ import {
   Image,
 } from 'react-native';
 import Header from './Header';
-import {Teams, Venue} from '../Helpers/Teams';
+import {T20_TEAMS as Teams, VENUE_T20 as Venue} from '../Helpers/Teams';
 import Config from '../Config';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
 import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
-import {Players} from '../Helpers/Players';
+import {PLAYERS_T20 as Players} from '../Helpers/Players';
 import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
 import {Card, Avatar, Text as TextElement} from 'react-native-elements';
 import {DataTable} from 'react-native-paper';
@@ -105,19 +105,19 @@ export default class BatsmanScoreT20 extends Component {
     const {teamAPrediction, teamBPrediction} = this.state;
     var teamArray = [];
     var venueArray = [];
-    var playerArray = [{label: 'Azhar Ali', value: 'Azhar Ali'}];
-    Teams.map((team) => {
+    var playerArray = [{label: 'Select Player', value: 'Select Player'}];
+    Teams.sort().map((team) => {
       teamArray.push({label: team, value: team});
     });
-    Venue.map((venue) => {
+    Venue.sort().map((venue) => {
       venueArray.push({label: venue, value: venue});
     });
     for (let key in Players) {
       if (key === this.state.bating_team) {
         playerArray = [];
-        Players[key].batsmen.map((item) =>
-          playerArray.push({label: item, value: item}),
-        );
+        Players[key].striker
+          .sort()
+          .map((item) => playerArray.push({label: item, value: item}));
       }
     }
 
@@ -136,7 +136,7 @@ export default class BatsmanScoreT20 extends Component {
               <Text style={{padding: 10}}>Select Batting Team</Text>
               <DropDownPicker
                 items={teamArray}
-                defaultValue="Pakistan"
+                defaultValue="Select Team"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
@@ -165,7 +165,7 @@ export default class BatsmanScoreT20 extends Component {
               <Text style={{padding: 10}}>Select Batsman</Text>
               <DropDownPicker
                 items={playerArray}
-                defaultValue="Azhar Ali"
+                defaultValue="Select Player"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
@@ -194,7 +194,7 @@ export default class BatsmanScoreT20 extends Component {
             <View style={{zIndex: 2}}>
               <DropDownPicker
                 items={teamArray}
-                defaultValue="India"
+                defaultValue="Select Team"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
@@ -236,7 +236,7 @@ export default class BatsmanScoreT20 extends Component {
                   borderBottomLeftRadius: 20,
                   borderBottomRightRadius: 20,
                 }}
-                defaultValue="Sharjah Cricket Stadium"
+                defaultValue="Select Venue"
                 containerStyle={{height: 40}}
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{

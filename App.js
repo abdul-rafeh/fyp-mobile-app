@@ -20,6 +20,7 @@ import {post} from './Request';
 import Config from './Config';
 import {createStackNavigator} from '@react-navigation/stack';
 import LiveMatch from './Screens/LiveMatch';
+import LiveMatchPrediction from './Screens/LiveMatchPrediction';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 function DashboardContent() {
@@ -33,6 +34,10 @@ function DashboardContent() {
         }}
       />
       <Stack.Screen name="LiveMatch" component={LiveMatch} />
+      <Stack.Screen
+        name="LiveMatchPrediction"
+        component={LiveMatchPrediction}
+      />
     </Stack.Navigator>
   );
 }

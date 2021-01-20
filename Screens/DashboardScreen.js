@@ -93,6 +93,17 @@ export default class DashboardScreen extends Component {
                       title="Stream"
                       type="outline"></Button>
                   ) : undefined}
+                  {/* {!u.name.includes('Test') &&
+                  !u.series.name.includes('KFC') &&
+                  !u.series.name.includes('Women') ? (
+                    <Button
+                      onPress={() =>
+                        this.props.navigation.navigate('LiveMatchPrediction', {
+                          search: u.id + '/' + u.series.id,
+                        })
+                      }
+                      title="Predict"></Button>
+                  ) : undefined} */}
                 </ListItem>
               ))}
             </Card>

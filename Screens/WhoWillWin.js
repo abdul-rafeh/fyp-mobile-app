@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import Header from './Header';
-import {Teams, Venue} from '../Helpers/Teams';
+import {ODI_TEAMS as Teams, VENUE_ODI as Venue} from '../Helpers/Teams';
 import Config from '../Config';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
@@ -40,6 +40,7 @@ export default class WhoWillWin extends Component {
       venue: '',
       target: 0,
       teamAPrediction: '',
+      check: true,
     };
   }
   componentDidMount() {
@@ -149,10 +150,10 @@ export default class WhoWillWin extends Component {
     const {teamAPrediction, teamBPrediction} = this.state;
     var teamArray = [];
     var venueArray = [];
-    Teams.map((team) => {
+    Teams.sort().map((team) => {
       teamArray.push({label: team, value: team});
     });
-    Venue.map((venue) => {
+    Venue.sort().map((venue) => {
       venueArray.push({label: venue, value: venue});
     });
     if (this.state.isLoading === false && this.state.scroll === true) {
@@ -171,7 +172,7 @@ export default class WhoWillWin extends Component {
                 <Text style={{padding: 10}}>Batting team</Text>
                 <DropDownPicker
                   items={teamArray}
-                  defaultValue="Pakistan"
+                  defaultValue="Select Team"
                   containerStyle={{height: 40}}
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
@@ -199,7 +200,7 @@ export default class WhoWillWin extends Component {
                 <View style={{zIndex: 2}}>
                   <DropDownPicker
                     items={teamArray}
-                    defaultValue="India"
+                    defaultValue="Select Team"
                     containerStyle={{height: 40}}
                     // eslint-disable-next-line react-native/no-inline-styles
                     style={{
@@ -241,7 +242,7 @@ export default class WhoWillWin extends Component {
                       borderBottomLeftRadius: 20,
                       borderBottomRightRadius: 20,
                     }}
-                    defaultValue="Sharjah Cricket Stadium"
+                    defaultValue="Select Venue"
                     containerStyle={{height: 40}}
                     // eslint-disable-next-line react-native/no-inline-styles
                     style={{
@@ -279,9 +280,14 @@ export default class WhoWillWin extends Component {
                   <TextInput
                     style={styles.inputText}
                     placeholder="Overs"
-                    placeholderTextColor="#808080"
+                    placeholderTextColor={this.state.check ? '#808080' : 'red'}
                     onChangeText={(val) =>
-                      this.setState({overs: val, scroll: false, loading: false})
+                      this.setState({
+                        overs: val,
+                        scroll: false,
+                        loading: false,
+                        check: true,
+                      })
                     }
                   />
                 </View>
@@ -419,6 +425,7 @@ export default class WhoWillWin extends Component {
                   style={styles.loginBtn}
                   onPress={() => {
                     // eslint-disable-next-line no-lone-blocks
+
                     this.handleSubmit(
                       this.state.overs,
                       this.state.balls,
@@ -474,29 +481,22 @@ export default class WhoWillWin extends Component {
                         Batting Team Predicted Score
                       </Card.Title>
                       <Card.Divider />
-                      <LinearGradient
-                        colors={['#00ff59', '#89ff89', '#ffffff']}
-                        start={{x: 0.0, y: 0.5}}
-                        end={{x: 0.5, y: 1.0}}
-                        locations={[0.75, 0.5, 0.1]}
-                        // useAngle: true, angle: 45
-                      >
-                        <View
+
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Text
                           style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                            fontSize: 40,
+                            fontWeight: 'bold',
+                            padding: 20,
+                            color: '#808080',
                           }}>
-                          <Text
-                            style={{
-                              fontSize: 40,
-                              fontWeight: 'bold',
-                              padding: 20,
-                              color: '#808080',
-                            }}>
-                            {teamAPrediction.predictions.total}
-                          </Text>
-                        </View>
-                      </LinearGradient>
+                          {teamAPrediction.predictions.total}
+                        </Text>
+                      </View>
                     </Card>
                     <Card containerStyle={{width: '100%'}}>
                       <Card.Title style={{fontSize: 16}}>
@@ -547,7 +547,7 @@ export default class WhoWillWin extends Component {
                               alignItems: 'center',
                               justifyContent: 'center',
                             }}>
-                            <TextElement h1>
+                            <TextElement h1 style={{color: '#808080'}}>
                               {teamAPrediction.predictions.total_fours}
                             </TextElement>
                           </View>
@@ -562,7 +562,7 @@ export default class WhoWillWin extends Component {
                               alignItems: 'center',
                               justifyContent: 'center',
                             }}>
-                            <TextElement h1>
+                            <TextElement h1 style={{color: '#808080'}}>
                               {teamAPrediction.predictions.total_sixes}
                             </TextElement>
                           </View>

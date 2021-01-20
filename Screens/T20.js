@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import Header from './Header';
-import {Teams, Venue} from '../Helpers/Teams';
+import {T20_TEAMS as Teams, VENUE_T20 as Venue} from '../Helpers/Teams';
 import Config from '../Config';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
@@ -44,19 +44,19 @@ export default class T20 extends Component {
   }
   componentDidMount() {
     this.setState({
-      venue: 'Sharjah Cricket Stadium',
-      team_a: 'Pakistan',
-      team_b: 'India',
+      venue: 'Eden Park',
+      team_a: 'New Zealand',
+      team_b: 'Pakistan',
       runs: 100,
-      wickets: 3,
-      overs: 5,
+      wickets: 6,
+      overs: 15,
       balls: 1,
-      runs_last_5: 10,
+      runs_last_5: 49,
       wickets_last_5: 0,
-      fours_till_now: 0,
-      sixes_till_now: 1,
+      fours_till_now: 8,
+      sixes_till_now: 6,
       no_balls_till_now: 0,
-      wide_balls_till_now: 0,
+      wide_balls_till_now: 1,
     });
   }
 
@@ -150,10 +150,10 @@ export default class T20 extends Component {
     const {teamAPrediction, teamBPrediction} = this.state;
     var teamArray = [];
     var venueArray = [];
-    Teams.map((team) => {
+    Teams.sort().map((team) => {
       teamArray.push({label: team, value: team});
     });
-    Venue.map((venue) => {
+    Venue.sort().map((venue) => {
       venueArray.push({label: venue, value: venue});
     });
     if (this.state.isLoading === false && this.state.scroll) {
@@ -171,7 +171,7 @@ export default class T20 extends Component {
                 <Text style={{padding: 10}}>Batting team</Text>
                 <DropDownPicker
                   items={teamArray}
-                  defaultValue="Pakistan"
+                  defaultValue="Select Team"
                   containerStyle={{height: 40}}
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
@@ -199,7 +199,7 @@ export default class T20 extends Component {
                   <Text style={{padding: 10}}>Bowling team</Text>
                   <DropDownPicker
                     items={teamArray}
-                    defaultValue="India"
+                    defaultValue="Select Team"
                     containerStyle={{height: 40}}
                     // eslint-disable-next-line react-native/no-inline-styles
                     style={{
@@ -241,7 +241,7 @@ export default class T20 extends Component {
                       borderBottomLeftRadius: 20,
                       borderBottomRightRadius: 20,
                     }}
-                    defaultValue="Sharjah Cricket Stadium"
+                    defaultValue="Select Venue"
                     containerStyle={{height: 40}}
                     // eslint-disable-next-line react-native/no-inline-styles
                     style={{
@@ -470,29 +470,21 @@ export default class T20 extends Component {
                         Batting Team Predicted Score
                       </Card.Title>
                       <Card.Divider />
-                      <LinearGradient
-                        colors={['#00ff59', '#89ff89', '#ffffff']}
-                        start={{x: 0.0, y: 0.5}}
-                        end={{x: 0.5, y: 1.0}}
-                        locations={[0.75, 0.5, 0.1]}
-                        // useAngle: true, angle: 45
-                      >
-                        <View
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Text
                           style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                            fontSize: 40,
+                            fontWeight: 'bold',
+                            padding: 20,
+                            color: '#808080',
                           }}>
-                          <Text
-                            style={{
-                              fontSize: 40,
-                              fontWeight: 'bold',
-                              padding: 20,
-                              color: '#808080',
-                            }}>
-                            {teamAPrediction.predictions.total}
-                          </Text>
-                        </View>
-                      </LinearGradient>
+                          {teamAPrediction.predictions.total}
+                        </Text>
+                      </View>
                     </Card>
                     <Card containerStyle={{width: '100%'}}>
                       <Card.Title style={{fontSize: 16}}>
@@ -505,7 +497,7 @@ export default class T20 extends Component {
                           borderRadius: 5,
                         }}
                         data={{
-                          labels: ['4', '8', '12', '16', '20'],
+                          labels: ['10', '20'],
                           datasets: [
                             {
                               data: teamAPrediction.predictions.runrates,
@@ -513,11 +505,11 @@ export default class T20 extends Component {
                             },
                           ],
                         }}
-                        segments={4}
+                        segments={8}
                         width={375} // from react-native
                         height={220}
                         verticalLabelRotation={0}
-                        fromZero={false}
+                        fromZero={true}
                         chartConfig={{
                           backgroundColor: '#000',
                           backgroundGradientFrom: '#FFF',
