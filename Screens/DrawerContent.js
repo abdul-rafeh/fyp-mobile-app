@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
   useTheme,
@@ -7,36 +7,38 @@ import {
   Caption,
   Paragraph,
   Drawer,
-  Text,
-  TouchableRipple,
-  Switch,
 } from 'react-native-paper';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../Components/context';
 
 export function DrawerContent(props) {
+  const [email, setEmail] = useState(null);
+  useEffect(() => {
+    async function getEmail() {
+      let getEmailNow = null;
+      getEmailNow = await AsyncStorage.getItem('email');
+      setEmail(getEmailNow);
+    }
+    getEmail();
+  }, []);
+
   const paperTheme = useTheme();
 
   const {signOut} = React.useContext(AuthContext);
 
   return (
     <View style={{flex: 1}}>
+      {/* {getEmail} */}
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
             <View style={{flexDirection: 'row', marginTop: 15}}>
-              <Avatar.Image
-                source={{
-                  uri: 'https://api.adorable.io/avatars/50/abott@adorable.png',
-                }}
-                size={50}
-              />
               <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                <Title style={styles.title}>John Doe</Title>
-                <Caption style={styles.caption}>@j_doe</Caption>
+                <Caption style={styles.caption}>Welcome back, </Caption>
+                <Title style={styles.title}>{email}</Title>
               </View>
             </View>
           </View>
@@ -46,45 +48,45 @@ export function DrawerContent(props) {
               icon={({color, size}) => (
                 <Icon name="home-outline" color={color} size={size} />
               )}
-              label="Home"
+              label="Dashboard"
               onPress={() => {
-                props.navigation.navigate('Home');
+                props.navigation.navigate('DashboardContent');
               }}
             />
             <DrawerItem
               icon={({color, size}) => (
-                <Icon name="account-outline" color={color} size={size} />
+                <Icon name="cricket" color={color} size={size} />
               )}
-              label="Who Will Win?"
+              label="ODI Prediction"
               onPress={() => {
                 props.navigation.navigate('WhoWillWin');
               }}
             />
             <DrawerItem
               icon={({color, size}) => (
-                <Icon name="bookmark-outline" color={color} size={size} />
+                <Icon name="cricket" color={color} size={size} />
               )}
-              label="Bookmarks"
+              label="T20 Prediction"
               onPress={() => {
-                props.navigation.navigate('BookmarkScreen');
+                props.navigation.navigate('T20Screen');
               }}
             />
             <DrawerItem
               icon={({color, size}) => (
-                <Icon name="settings-outline" color={color} size={size} />
+                <Icon name="cricket" color={color} size={size} />
               )}
-              label="Settings"
+              label="Batsman ODI Score"
               onPress={() => {
-                props.navigation.navigate('SettingsScreen');
+                props.navigation.navigate('BatsmanODIScreen');
               }}
             />
             <DrawerItem
               icon={({color, size}) => (
-                <Icon name="account-check-outline" color={color} size={size} />
+                <Icon name="cricket" color={color} size={size} />
               )}
-              label="Support"
+              label="Batsman T20 Score"
               onPress={() => {
-                props.navigation.navigate('SupportScreen');
+                props.navigation.navigate('BatsmanT20Screen');
               }}
             />
           </Drawer.Section>

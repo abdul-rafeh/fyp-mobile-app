@@ -11,11 +11,36 @@ import {AuthContext} from './Components/context';
 import AuthStackScreen from './Screens/AuthStackScreen';
 import DashboardScreen from './Screens/DashboardScreen';
 import WhoWillWin from './Screens/WhoWillWin';
+import T20Screen from './Screens/T20';
+import BatsmanODIScreen from './Screens/BatsmanScoreODI';
+import BatsmanT20Screen from './Screens/BatsmanScoreT20';
 import {DrawerContent} from './Screens/DrawerContent';
 import Toast from 'react-native-simple-toast';
 import {post} from './Request';
 import Config from './Config';
+import {createStackNavigator} from '@react-navigation/stack';
+import LiveMatch from './Screens/LiveMatch';
+import LiveMatchPrediction from './Screens/LiveMatchPrediction';
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+function DashboardContent() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="DashboardScreen"
+        component={DashboardScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen name="LiveMatch" component={LiveMatch} />
+      <Stack.Screen
+        name="LiveMatchPrediction"
+        component={LiveMatchPrediction}
+      />
+    </Stack.Navigator>
+  );
+}
 function App() {
   const initialLoginState = {
     isLoading: true,
@@ -28,6 +53,7 @@ function App() {
         return {
           ...prevState,
           userToken: action.token,
+          email: action.email,
           isLoading: false,
         };
       case 'SIGNIN':
@@ -72,9 +98,10 @@ function App() {
               console.log(res);
               try {
                 userToken = res.accessToken;
+                email = res.email;
                 // role = res.roles;
                 AsyncStorage.setItem('userToken', userToken);
-                // AsyncStorage.setItem('role', role);
+                AsyncStorage.setItem('email', email);
                 dispatch({type: 'SIGNIN', id: email, token: userToken});
               } catch (e) {
                 console.log(e);
@@ -129,15 +156,16 @@ function App() {
   useEffect(() => {
     setTimeout(async () => {
       let userToken = null;
+      let email = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
       } catch (e) {
         console.log(e);
       }
-      dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
+
+      dispatch({type: 'RETRIEVE_TOKEN', email: email, token: userToken});
     }, 1000);
   }, []);
-
   if (loginState.isLoading) {
     return (
       // eslint-disable-next-line react-native/no-inline-styles
@@ -146,17 +174,30 @@ function App() {
       </View>
     );
   }
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         {loginState.userToken !== null ? (
-          <Drawer.Navigator
-            drawerContent={(props) => <DrawerContent {...props} />}>
-            <Drawer.Screen name="DashboardScreen" component={DashboardScreen} />
-            <Drawer.Screen name="WhoWillWin" component={WhoWillWin} />
-            {/* <Drawer.Screen name="SettingsScreen" component={SettingsScreen} /> */}
-            {/* <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} /> */}
-          </Drawer.Navigator>
+          <>
+            <Drawer.Navigator
+              drawerContent={(props) => <DrawerContent {...props} />}>
+              <Drawer.Screen
+                name="DashboardContent"
+                component={DashboardContent}
+              />
+              <Drawer.Screen name="WhoWillWin" component={WhoWillWin} />
+              <Drawer.Screen name="T20Screen" component={T20Screen} />
+              <Drawer.Screen
+                name="BatsmanODIScreen"
+                component={BatsmanODIScreen}
+              />
+              <Drawer.Screen
+                name="BatsmanT20Screen"
+                component={BatsmanT20Screen}
+              />
+            </Drawer.Navigator>
+          </>
         ) : (
           <AuthStackScreen />
         )}

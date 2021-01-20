@@ -11,16 +11,16 @@ import {
   Image,
 } from 'react-native';
 import Header from './Header';
-import {ODI_TEAMS as Teams, VENUE_ODI as Venue} from '../Helpers/Teams';
+import {T20_TEAMS as Teams, VENUE_T20 as Venue} from '../Helpers/Teams';
 import Config from '../Config';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {BarChart, LineChart, PieChart} from 'react-native-chart-kit';
 import {post} from '../Request';
 import {getFlagImages} from '../Helpers/Flags';
-import {Card, Avatar, Text as TextElement} from 'react-native-elements';
+import {CardViewWithImage, CardView} from 'react-native-simple-card-view';
 import LinearGradient from 'react-native-linear-gradient';
-
-export default class WhoWillWin extends Component {
+import {Card, Avatar, Text as TextElement} from 'react-native-elements';
+export default class T20 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,24 +40,23 @@ export default class WhoWillWin extends Component {
       venue: '',
       target: 0,
       teamAPrediction: '',
-      check: true,
     };
   }
   componentDidMount() {
     this.setState({
-      venue: 'Sharjah Cricket Stadium',
-      team_a: 'Pakistan',
-      team_b: 'England',
+      venue: 'Eden Park',
+      team_a: 'New Zealand',
+      team_b: 'Pakistan',
       runs: 100,
-      wickets: 3,
-      overs: 5,
+      wickets: 6,
+      overs: 15,
       balls: 1,
-      runs_last_5: 10,
+      runs_last_5: 49,
       wickets_last_5: 0,
-      fours_till_now: 0,
-      sixes_till_now: 1,
+      fours_till_now: 8,
+      sixes_till_now: 6,
       no_balls_till_now: 0,
-      wide_balls_till_now: 0,
+      wide_balls_till_now: 1,
     });
   }
 
@@ -95,7 +94,7 @@ export default class WhoWillWin extends Component {
 
     this.setState({isLoading: true});
     let teamAPrediction = await post(
-      Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET_ODI,
+      Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET_T20,
       dataA,
     );
 
@@ -122,7 +121,7 @@ export default class WhoWillWin extends Component {
       target: teamAPrediction.predictions.total + 1,
     };
     let teamBPrediction = await post(
-      Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET_ODI,
+      Config.URL.PREDICTION.PREDICT_MATCH_WITH_TARGET_T20,
       dataB,
     );
 
@@ -132,8 +131,8 @@ export default class WhoWillWin extends Component {
         teamBPrediction: teamBPrediction,
         isLoading: false,
         predicted: true,
-        scroll: true,
       });
+      this.scroll.scrollTo({y: 1000});
     } else {
       this.setState({error: true, isLoading: false});
     }
@@ -146,6 +145,7 @@ export default class WhoWillWin extends Component {
       return this.state.team_b;
     }
   };
+
   render() {
     const {teamAPrediction, teamBPrediction} = this.state;
     var teamArray = [];
@@ -156,12 +156,11 @@ export default class WhoWillWin extends Component {
     Venue.sort().map((venue) => {
       venueArray.push({label: venue, value: venue});
     });
-    if (this.state.isLoading === false && this.state.scroll === true) {
+    if (this.state.isLoading === false && this.state.scroll) {
       setTimeout(() => {
         this.scroll.scrollTo({y: 700});
       }, 1000);
     }
-
     return (
       <>
         <View style={styles.container}>
@@ -196,8 +195,8 @@ export default class WhoWillWin extends Component {
                     })
                   }
                 />
-                <Text style={{padding: 10}}>Bowling team</Text>
                 <View style={{zIndex: 2}}>
+                  <Text style={{padding: 10}}>Bowling team</Text>
                   <DropDownPicker
                     items={teamArray}
                     defaultValue="Select Team"
@@ -280,14 +279,9 @@ export default class WhoWillWin extends Component {
                   <TextInput
                     style={styles.inputText}
                     placeholder="Overs"
-                    placeholderTextColor={this.state.check ? '#808080' : 'red'}
+                    placeholderTextColor="#808080"
                     onChangeText={(val) =>
-                      this.setState({
-                        overs: val,
-                        scroll: false,
-                        loading: false,
-                        check: true,
-                      })
+                      this.setState({overs: val, scroll: false, loading: false})
                     }
                   />
                 </View>
@@ -376,13 +370,7 @@ export default class WhoWillWin extends Component {
                     style={styles.inputText}
                     placeholder="No Balls Till Now"
                     placeholderTextColor="#808080"
-                    onChangeText={(val) =>
-                      this.setState({
-                        noBallsTillNow: val,
-                        scroll: false,
-                        loading: false,
-                      })
-                    }
+                    onChangeText={(val) => this.setState({noBallsTillNow: val})}
                   />
                 </View>
                 <View style={styles.inputView}>
@@ -425,7 +413,6 @@ export default class WhoWillWin extends Component {
                   style={styles.loginBtn}
                   onPress={() => {
                     // eslint-disable-next-line no-lone-blocks
-
                     this.handleSubmit(
                       this.state.overs,
                       this.state.balls,
@@ -442,11 +429,13 @@ export default class WhoWillWin extends Component {
                       this.state.venue,
                       this.state.target,
                     );
+                    this.setState({scroll: true});
                   }}>
                   <Text style={(styles.loginText, {color: 'white'})}>
                     Predict
                   </Text>
                 </TouchableOpacity>
+
                 {this.state.isLoading ? (
                   <ActivityIndicator />
                 ) : this.state.predicted && this.state.scroll ? (
@@ -481,7 +470,6 @@ export default class WhoWillWin extends Component {
                         Batting Team Predicted Score
                       </Card.Title>
                       <Card.Divider />
-
                       <View
                         style={{
                           alignItems: 'center',
@@ -504,29 +492,35 @@ export default class WhoWillWin extends Component {
                       </Card.Title>
                       <Card.Divider />
                       <BarChart
+                        style={{
+                          marginVertical: 8,
+                          borderRadius: 5,
+                        }}
                         data={{
-                          labels: ['10', '20', '30', '40', '50'],
+                          labels: ['10', '20'],
                           datasets: [
                             {
                               data: teamAPrediction.predictions.runrates,
+                              // data: [20, 45, 28, 80, 99, 43],
                             },
                           ],
                         }}
-                        segments={4}
+                        segments={8}
                         width={375} // from react-native
                         height={220}
                         verticalLabelRotation={0}
-                        fromZero={false}
+                        fromZero={true}
                         chartConfig={{
                           backgroundColor: '#000',
                           backgroundGradientFrom: '#FFF',
                           backgroundGradientTo: '#FFF',
                           decimalPlaces: 1, // optional, defaults to 2dp
                           color: (opacity = 6) => `rgb(205, 92, 92)`,
-                          labelColor: (opacity = 1) => `rgb(128,0,0)`,
+                          labelColor: (opacity = 1) => `rgb(128, 128, 128)`,
                         }}
                       />
                     </Card>
+
                     <Card containerStyle={{width: '100%'}}>
                       <Card.Title style={{fontSize: 16}}>
                         Predicted Boundries
@@ -547,7 +541,7 @@ export default class WhoWillWin extends Component {
                               alignItems: 'center',
                               justifyContent: 'center',
                             }}>
-                            <TextElement h1 style={{color: '#808080'}}>
+                            <TextElement h1>
                               {teamAPrediction.predictions.total_fours}
                             </TextElement>
                           </View>
@@ -562,7 +556,7 @@ export default class WhoWillWin extends Component {
                               alignItems: 'center',
                               justifyContent: 'center',
                             }}>
-                            <TextElement h1 style={{color: '#808080'}}>
+                            <TextElement h1>
                               {teamAPrediction.predictions.total_sixes}
                             </TextElement>
                           </View>
